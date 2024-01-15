@@ -6,6 +6,7 @@ import cors from 'cors'
 import { createServer } from 'http'
 import { Server as SocketIOServer } from 'socket.io'
 import { consoleLogging } from './middleware/consoleLogging'
+import customPoweredBy from './middleware/customPoweredBy'
 
 if (process.env.NODE_ENV === 'development') {
   if (fs.existsSync('.env')) {
@@ -48,6 +49,9 @@ const httpServer = createServer(app)
 
 // Console logging middleware
 app.use(consoleLogging)
+
+// server.disable('x-powered-by');
+app.use(customPoweredBy(getRequiredEnvVariable('POWERED_BY')))
 
 // Apply CORS middleware with custom options
 app.use(cors(corsOptions))
