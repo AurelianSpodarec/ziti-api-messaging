@@ -1,0 +1,49 @@
+# Ignore node_modules (npm dependencies)
+node_modules
+
+# Ignore generated JavaScript and TypeScript build files
+*.js
+*.js.map
+*.d.ts
+# Except for bootstrap.js
+!bootstrap.js
+
+# Ignore log files and runtime data
+logs
+*.log
+npm-debug.log*
+
+# Ignore OS and editor-specific files
+.DS_Store
+Thumbs.db
+.vscode
+
+# Ignore environment-specific configuration files
+.env
+*.cnf
+
+# Ignore user-specific files
+.npmrc
+
+# Ignore project-specific config files
+# config
+
+# Ignore test reports
+coverage
+
+# Ignore dependencies installed via yarn (if you're using yarn)
+yarn-error.log
+
+# Ignore development-only files
+test
+tests
+
+# Ignore build
+dist
+
+# Keys
+/keystore/
+*.pem
+
+# ToDo notes
+ToDo.txt
