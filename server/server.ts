@@ -2,6 +2,11 @@ import fs from 'fs'
 import dotenv from 'dotenv'
 import express, { type Request, type Response } from 'express'
 import { getRequiredEnvVariable } from './utils/getRequiredEnvVariable'
+import cors from 'cors'
+import { createServer } from 'http'
+import { Server as SocketIOServer } from 'socket.io'
+import { consoleLogging } from './middleware/consoleLogging'
+import customPoweredBy from './middleware/customPoweredBy'
 
 if (process.env.NODE_ENV === 'development') {
   if (fs.existsSync('.env')) {
@@ -11,17 +16,80 @@ if (process.env.NODE_ENV === 'development') {
   }
 }
 
-const server = express()
+// CORS options configuration
+const corsOptions = {
+  // Function to dynamically set allowed origins based on incoming request
+  origin: (
+    origin: string | undefined,
+    callback: (error: Error | null, allow?: boolean) => void
+  ) => {
+    // Retrieve list of allowed domains from an environment variable
+    const allowedDomains = getRequiredEnvVariable('ALLOWED_ORIGINS').split(',')
 
-server.get('/', (req: Request, res: Response) => {
-  res.send('Hello World with TypeScript!')
+    if (process.env.NODE_ENV !== 'production') {
+      // Allow all origins in non-production environments
+      console.log(`\x1b[32mAllowed origin (non-production): ${origin}\x1b[0m`)
+      callback(null, true)
+    } else if (origin !== undefined && allowedDomains.includes(origin)) {
+      // In production, check against the list of allowed origins
+      console.log(`\x1b[32mAllowed origin: ${origin}\x1b[0m`)
+      callback(null, true)
+    } else {
+      // Block origins not in the allowed list
+      console.log(`\x1b[31mBlocked origin: ${origin}\x1b[0m`)
+      callback(new Error('403: Origin not permitted by CORS policy'), false)
+    }
+  },
+  // Enable credentials (cookies) for CORS requests
+  credentials: true
+}
+
+const app = express()
+const httpServer = createServer(app)
+
+// Console logging middleware
+app.use(consoleLogging)
+
+// server.disable('x-powered-by');
+app.use(customPoweredBy(getRequiredEnvVariable('POWERED_BY')))
+
+// Apply CORS middleware with custom options
+app.use(cors(corsOptions))
+
+// Handle preflight requests (OPTIONS)
+app.options('*', cors(corsOptions))
+
+app.get('/', (req: Request, res: Response) => {
+  res.status(204).end()
 })
 
 const host = getRequiredEnvVariable('HOST')
 const port = getRequiredEnvVariable('PORT')
 
-server.listen(port, () => {
+httpServer.listen(port, () => {
   const message = `[server]: Server is running at http://${host}:${port}`
   const greenMessage = `\x1b[32m${message}\x1b[0m`
   console.log(greenMessage)
+}).on('error', (err) => {
+  console.error('Failed to start server:', err)
+})
+
+// Create a Socket.IO server
+const io = new SocketIOServer(httpServer, {
+  cors: corsOptions
+})
+
+io.on('connection', (socket) => {
+  console.log('A user connected')
+
+  socket.on('disconnect', () => {
+    console.log('User disconnected')
+  })
+
+  // Example of handling a custom event
+  socket.on('chat message', (msg) => {
+    console.log('Message received: ' + msg)
+    // Echo back the message to the same client
+    socket.emit('chat message', `Echo: ${msg}`)
+  })
 })
