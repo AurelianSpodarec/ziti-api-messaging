@@ -1,5 +1,5 @@
-import fs from 'fs'
-import dotenv from 'dotenv'
+// server/server.ts
+
 import express, { type Request, type Response } from 'express'
 import { getRequiredEnvVariable } from './utils/getRequiredEnvVariable'
 import cors from 'cors'
@@ -8,14 +8,6 @@ import { Server as SocketIOServer } from 'socket.io'
 import { consoleLogging } from './middleware/consoleLogging'
 import customPoweredBy from './middleware/customPoweredBy'
 import messagesSqlDb from './messagesSqlDb'
-
-if (process.env.NODE_ENV === 'development') {
-  if (fs.existsSync('.env')) {
-    dotenv.config()
-  } else {
-    throw new Error('.env file not found')
-  }
-}
 
 // CORS options configuration
 const corsOptions = {
