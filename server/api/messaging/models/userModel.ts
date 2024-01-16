@@ -2,6 +2,7 @@
 
 import { Model, DataTypes, type Sequelize } from 'sequelize'
 import type Conversation from './conversationModel'
+import type UnreadMessage from './unreadMessageModel'
 
 // Extend Model class for TypeScript typing
 class User extends Model {
@@ -15,8 +16,10 @@ class User extends Model {
 
   public static associate (models: {
     Conversation: typeof Conversation
+    UnreadMessage: typeof UnreadMessage
   }): void {
     User.belongsToMany(models.Conversation, { through: 'Users_Conversations' })
+    User.hasMany(models.UnreadMessage, { foreignKey: 'userId' })
   }
 }
 
