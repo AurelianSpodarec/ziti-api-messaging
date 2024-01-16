@@ -7,8 +7,8 @@ import { createServer } from 'http'
 import { Server as SocketIOServer } from 'socket.io'
 import { consoleLogging } from './middleware/consoleLogging'
 import customPoweredBy from './middleware/customPoweredBy'
-import messagesSqlDb from './messagesSqlDb'
-import connectMongoDb from './messagesNoSqlDb'
+import initPostgres from './messagesPostgres'
+import initMongo from './messagesMongo'
 
 // CORS options configuration
 const corsOptions = {
@@ -54,7 +54,7 @@ app.use(cors(corsOptions))
 app.options('*', cors(corsOptions))
 
 // Standard DB Processing
-messagesSqlDb.sequelizeAuth
+initPostgres.sequelizeMsg
   .sync({ force: false })
   .then(() => {
     console.log('\x1b[32mSynced db.\x1b[0m')
@@ -64,7 +64,7 @@ messagesSqlDb.sequelizeAuth
   })
 
 // Connect to MongoDB at the start of your application
-connectMongoDb()
+initMongo()
   .then(() => {
     // MongoDB is connected. Start Express server or other operations here.
   })

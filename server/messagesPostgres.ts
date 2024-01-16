@@ -8,7 +8,7 @@ import { initUser } from './api/messaging/models/userModel'
 import { initConversation } from './api/messaging/models/conversationModel'
 
 // Initialize Sequelize instance
-const sequelizeAuth = new Sequelize(
+const sequelizeMsg = new Sequelize(
   config.messagesSqlDb.DB,
   config.messagesSqlDb.USER,
   config.messagesSqlDb.PASSWORD,
@@ -25,23 +25,23 @@ const sequelizeAuth = new Sequelize(
   }
 )
 
-// console.log("\nsequelizeAuth: ", sequelizeAuth.config);
+// console.log("\nsequelizeMsg: ", sequelizeMsg.config);
 
 // Initialize the models
-// Auth
-const User = initUser(sequelizeAuth)
-const Conversation = initConversation(sequelizeAuth)
+// Message
+const User = initUser(sequelizeMsg)
+const Conversation = initConversation(sequelizeMsg)
 
 // Define associations (order is important)
 User.associate({ Conversation })
 Conversation.associate({ User })
 
 // Initialize the db object
-const messagesSqlDb: any = {
+const initPostgres: any = {
   Sequelize,
-  sequelizeAuth,
+  sequelizeMsg,
   User,
   Conversation
 }
 
-export default messagesSqlDb
+export default initPostgres

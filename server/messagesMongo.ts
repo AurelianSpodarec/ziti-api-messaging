@@ -3,7 +3,7 @@
 import mongoose from 'mongoose'
 import { mongoUri } from './config/mongo'
 
-const connectMongoDb = async (): Promise<typeof mongoose> => {
+const initMongo = async (): Promise<typeof mongoose> => {
   try {
     // Connect to MongoDB
     const connection = await mongoose.connect(mongoUri)
@@ -15,4 +15,4 @@ const connectMongoDb = async (): Promise<typeof mongoose> => {
   }
 }
 
-export default connectMongoDb
+export default initMongo
