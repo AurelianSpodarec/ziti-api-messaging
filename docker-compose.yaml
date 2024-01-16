@@ -29,9 +29,25 @@ services:
     env_file:
       - ./.env
 
+  mongodb:
+    image: mongo:7
+    networks:
+      - prod-mynetwork
+    ports:
+      - "${MONGODB_PORT}:${MONGODB_PORT}"
+    environment:
+      MONGO_INITDB_DATABASE: ${MONGODB_DATABASE}
+      MONGO_INITDB_ROOT_USERNAME: ${MONGODB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_ROOT_PASSWORD}
+    volumes:
+      - mongodb_data:/data/db
+    env_file:
+      - ./.env
+
 volumes:
-  postgres_data:
   redis_data:
+  postgres_data:
+  mongodb_data:
 
 networks:
   prod-mynetwork:
