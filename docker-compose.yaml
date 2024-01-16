@@ -1,0 +1,37 @@
+version: "3.8"
+
+services:
+  messages-redis:
+    image: redis:7
+    command: --requirepass ${REDIS_PASSWORD}
+    networks:
+      - prod-mynetwork
+    ports:
+      - ${REDIS_PORT}:${REDIS_PORT}
+    volumes:
+      - redis_data:/data
+    env_file:
+      - ./.env
+
+  postgres-db:
+    image: postgres:16
+    networks:
+      - prod-mynetwork
+    ports:
+      - ${MSGSQLDB_PORT}:${MSGSQLDB_PORT}
+    environment:
+      # POSTGRES_DB: ${MSGSQLDB_DATABASE}
+      POSTGRES_USER: ${MSGSQLDB_USER}
+      POSTGRES_PASSWORD: ${MSGSQLDB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/docker_volume:/docker-entrypoint-initdb.d
+    env_file:
+      - ./.env
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  prod-mynetwork:
