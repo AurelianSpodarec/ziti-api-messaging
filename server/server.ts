@@ -8,6 +8,7 @@ import { Server as SocketIOServer } from 'socket.io'
 import { consoleLogging } from './middleware/consoleLogging'
 import customPoweredBy from './middleware/customPoweredBy'
 import messagesSqlDb from './messagesSqlDb'
+import connectMongoDb from './messagesNoSqlDb'
 
 // CORS options configuration
 const corsOptions = {
@@ -60,6 +61,18 @@ messagesSqlDb.sequelizeAuth
   })
   .catch((err: Error) => {
     console.log('\x1b[31mFailed to sync db: ' + err.message + '\x1b[0m')
+  })
+
+// Connect to MongoDB at the start of your application
+connectMongoDb()
+  .then(() => {
+    // MongoDB is connected. Start Express server or other operations here.
+  })
+  .catch((error) => {
+    // Handle MongoDB connection error
+    console.error('MongoDB connection failed:', error)
+    // Depending on your application's needs, you might want to exit if the database connection is essential
+    process.exit(1)
   })
 
 app.get('/', (req: Request, res: Response) => {
