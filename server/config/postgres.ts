@@ -1,16 +1,6 @@
 // server/config/postgres.ts
 
-import fs from 'fs'
-import dotenv from 'dotenv'
 import { getRequiredEnvVariable } from '../utils/getRequiredEnvVariable'
-
-if (process.env.NODE_ENV === 'development') {
-  if (fs.existsSync('.env')) {
-    dotenv.config()
-  } else {
-    throw new Error('.env file not found')
-  }
-}
 
 function parseIntSafe (value: string, defaultValue: number): number {
   const parsedValue = parseInt(value.trim(), 10)
