@@ -7,6 +7,7 @@ import { createServer } from 'http'
 import { Server as SocketIOServer } from 'socket.io'
 import { consoleLogging } from './middleware/consoleLogging'
 import customPoweredBy from './middleware/customPoweredBy'
+import messagesSqlDb from './messagesSqlDb'
 
 if (process.env.NODE_ENV === 'development') {
   if (fs.existsSync('.env')) {
@@ -58,6 +59,16 @@ app.use(cors(corsOptions))
 
 // Handle preflight requests (OPTIONS)
 app.options('*', cors(corsOptions))
+
+// Standard DB Processing
+messagesSqlDb.sequelizeAuth
+  .sync({ force: false })
+  .then(() => {
+    console.log('\x1b[32mSynced db.\x1b[0m')
+  })
+  .catch((err: Error) => {
+    console.log('\x1b[31mFailed to sync db: ' + err.message + '\x1b[0m')
+  })
 
 app.get('/', (req: Request, res: Response) => {
   res.status(204).end()
