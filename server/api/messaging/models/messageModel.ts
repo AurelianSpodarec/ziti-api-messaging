@@ -55,10 +55,18 @@ interface IReply extends Document {
   updatedAt: Date
 }
 
+enum MessageStatus {
+  Sent = 'sent',
+  Delivered = 'delivered',
+  Read = 'read'
+}
+
 interface IMessage extends Document {
-  conversationId: mongoose.Types.ObjectId
-  senderId: mongoose.Types.ObjectId
+  conversationId: string
+  senderId: string
+  recipientId: string
   textContent: string
+  status: MessageStatus
   replies: IReply[]
   metadata: IMetadata
   media: IMedia[]
@@ -126,9 +134,11 @@ const replySchema = new Schema<IReply>({
 })
 
 const messageSchema = new Schema<IMessage>({
-  conversationId: mongoose.Types.ObjectId,
-  senderId: mongoose.Types.ObjectId,
+  conversationId: String,
+  senderId: String,
+  recipientId: String,
   textContent: String,
+  status: { type: String, enum: MessageStatus, default: MessageStatus.Sent },
   replies: [replySchema],
   metadata: metadataSchema,
   media: [mediaSchema],

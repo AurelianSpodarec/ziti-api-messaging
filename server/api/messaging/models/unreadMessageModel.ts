@@ -44,10 +44,6 @@ export const initUnreadMessage = (sequelize: Sequelize): typeof UnreadMessage =>
       messageId: {
         type: DataTypes.UUID, // Adjust according to your message ID format
         allowNull: false
-      },
-      sentAt: {
-        type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW
       }
     },
     {

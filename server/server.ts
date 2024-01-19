@@ -5,10 +5,12 @@ import { getRequiredEnvVariable } from './utils/getRequiredEnvVariable'
 import cors from 'cors'
 import { createServer } from 'http'
 import { Server as SocketIOServer } from 'socket.io'
+import { socketHandlers } from './utils/socketHandlers'
 import { consoleLogging } from './middleware/consoleLogging'
 import customPoweredBy from './middleware/customPoweredBy'
 import initPostgres from './messagesPostgres'
 import initMongo from './messagesMongo'
+import path from 'path'
 
 // CORS options configuration
 const corsOptions = {
@@ -75,6 +77,10 @@ initMongo()
     process.exit(1)
   })
 
+app.use('/public', express.static(path.join(__dirname, 'public')), (req: Request, res: Response) => {
+  res.status(404).send('404: File Not Found')
+})
+
 app.get('/', (req: Request, res: Response) => {
   res.status(204).end()
 })
@@ -95,17 +101,5 @@ const io = new SocketIOServer(httpServer, {
   cors: corsOptions
 })
 
-io.on('connection', (socket) => {
-  console.log('A user connected')
-
-  socket.on('disconnect', () => {
-    console.log('User disconnected')
-  })
-
-  // Example of handling a custom event
-  socket.on('chat message', (msg) => {
-    console.log('Message received: ' + msg)
-    // Echo back the message to the same client
-    socket.emit('chat message', `Echo: ${msg}`)
-  })
-})
+// Setup Socket.IO event handlers
+socketHandlers(io)

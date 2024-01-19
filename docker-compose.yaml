@@ -20,12 +20,12 @@ services:
     ports:
       - ${MSGSQLDB_PORT}:${MSGSQLDB_PORT}
     environment:
-      # POSTGRES_DB: ${MSGSQLDB_DATABASE}
+      POSTGRES_DB: ${MSGSQLDB_DATABASE}
       POSTGRES_USER: ${MSGSQLDB_USER}
       POSTGRES_PASSWORD: ${MSGSQLDB_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./scripts/docker_volume:/docker-entrypoint-initdb.d
+      - ./scripts/docker_volume/postgres:/docker-entrypoint-initdb.d:ro
     env_file:
       - ./.env
 
@@ -39,8 +39,11 @@ services:
       MONGO_INITDB_DATABASE: ${MONGODB_DATABASE}
       MONGO_INITDB_ROOT_USERNAME: ${MONGODB_ROOT_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_ROOT_PASSWORD}
+      MONGODB_MESSAGES_USERNAME=: ${MONGODB_MESSAGES_USERNAME}
+      MONGODB_MESSAGES_PASSWORD=: ${MONGODB_MESSAGES_PASSWORD}
     volumes:
       - mongodb_data:/data/db
+      - ./scripts/docker_volume/mongo:/docker-entrypoint-initdb.d:ro
     env_file:
       - ./.env
 
