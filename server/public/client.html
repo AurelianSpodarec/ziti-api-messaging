@@ -28,10 +28,11 @@
             });
 
             socket.on("private_message", (msg) => {
-              console.log("Message from server:", msg);
+              console.log("Private message received:", msg);
               var msgDiv = document.createElement("div");
               msgDiv.textContent = "Received: " + msg.message;
               messagesDiv.appendChild(msgDiv);
+              socket.emit("messageDelivered", { messageId: msg.messageId }); // Use square brackets to access the property
             });
           } else {
             // Update the userId registration if the user changes the selection
@@ -50,8 +51,7 @@
 
           // Display the sent message with socket ID
           var sentMsgDiv = document.createElement("div");
-          sentMsgDiv.textContent =
-            "Sent (Socket ID: " + mySocketId + "): " + message;
+          sentMsgDiv.textContent = "Sent: " + message;
           sentMsgDiv.style.color = "#CCCCCC"; // Styling for sent messages
           messagesDiv.appendChild(sentMsgDiv);
         });
