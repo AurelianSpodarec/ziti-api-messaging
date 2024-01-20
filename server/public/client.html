@@ -2,83 +2,12 @@
 <html>
   <head>
     <title>Socket.IO test</title>
+    <link rel="stylesheet" href="chat.css" />
     <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        var conversationIdInput = document.getElementById("conversationId");
-        var userIdSelect = document.getElementById("userId");
-        var recipientIdSelect = document.getElementById("recipientId");
-        var messageInput = document.getElementById("message");
-        var sendButton = document.getElementById("sendButton");
-        var messagesDiv = document.getElementById("messages");
-        var socket = null;
-        var mySocketId = ""; // Variable to store the socket ID
-
-        userIdSelect.addEventListener("change", function () {
-          // Create a new socket connection when a user is selected
-          if (socket === null) {
-            socket = io("http://localhost:3002");
-
-            socket.on("connect", () => {
-              console.log("Connected to server");
-              mySocketId = socket.id; // Store the socket ID once connected
-              console.log("Socket ID: ", mySocketId); // Log the socket ID
-              // Send the selected userId to the server
-              socket.emit("register", { userId: userIdSelect.value });
-            });
-
-            socket.on("private_message", (msg) => {
-              console.log("Private message received:", msg);
-              var msgDiv = document.createElement("div");
-              msgDiv.textContent = "Received: " + msg.message;
-              messagesDiv.appendChild(msgDiv);
-              socket.emit("messageDelivered", { messageId: msg.messageId }); // Use square brackets to access the property
-            });
-          } else {
-            // Update the userId registration if the user changes the selection
-            socket.emit("register", { userId: userIdSelect.value });
-          }
-        });
-
-        sendButton.addEventListener("click", function () {
-          var message = messageInput.value;
-          socket.emit("private_message", {
-            senderId: userIdSelect.value,
-            recipientId: recipientIdSelect.value,
-            conversationId: conversationIdInput.value,
-            message: message,
-          });
-
-          // Display the sent message with socket ID
-          var sentMsgDiv = document.createElement("div");
-          sentMsgDiv.textContent = "Sent: " + message;
-          sentMsgDiv.style.color = "#CCCCCC"; // Styling for sent messages
-          messagesDiv.appendChild(sentMsgDiv);
-        });
-      });
-    </script>
-    <style>
-      body {
-        background-color: rgb(39, 39, 39);
-        color: white;
-        font-family: Arial, sans-serif;
-      }
-      #messages {
-        background-color: #222;
-        padding: 10px;
-        margin-top: 20px;
-      }
-      .input-field,
-      #sendButton {
-        margin: 5px;
-      }
-      #messages div {
-        margin-top: 5px;
-      }
-    </style>
+    <script src="chat.js" defer></script>
   </head>
   <body>
-    <h1>Socket.IO Test</h1>
+    <h1>Socket.IO Chat</h1>
     <input
       class="input-field"
       type="text"
