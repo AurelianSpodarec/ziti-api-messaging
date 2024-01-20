@@ -1,3 +1,4 @@
+/* General Styles */
 body {
   background-color: #121212; /* Dark background for dark mode */
   color: white;
@@ -10,17 +11,7 @@ h1 {
   color: #007bff;
 }
 
-#messages {
-  background-color: #1e1e1e; /* Darker background for the message area */
-  border: 1px solid #333;
-  padding: 10px;
-  margin-top: 20px;
-  height: 300px;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-}
-
+/* Input Fields and Button Styles */
 .input-field,
 #sendButton {
   margin: 5px;
@@ -42,23 +33,62 @@ h1 {
   background-color: #218838;
 }
 
-#messages div {
+/* Chat Messages Container */
+#messages {
+  background-color: #1e1e1e; /* Darker background for the message area */
+  border: 1px solid #333;
+  padding: 10px;
+  margin-top: 20px;
+  height: 300px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Message Container */
+.message-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end; /* Align items to the end for sent messages */
+  margin-bottom: 10px;
+}
+
+/* Sent and received Messages */
+#messages .sent-message,
+#messages .received-message {
   padding: 10px 15px;
-  margin: 10px 5px;
   border-radius: 20px;
-  max-width: 60%;
-}
-
-/* Style for sent messages */
-.sent {
-  background-color: #007bff; /* Blue background for sent messages */
   color: white;
-  align-self: flex-end; /* Align to the right */
 }
 
-/* Style for received messages */
-.received {
+.sent-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  align-self: flex-end;
+  margin: 5px 0;
+}
+
+.received-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  align-self: flex-start;
+  margin: 5px 0;
+}
+
+.received-message {
   background-color: #333; /* Gray background for received messages */
-  color: white;
-  align-self: flex-start; /* Align to the left */
+}
+
+.sent-message {
+  background-color: #007bff; /* Blue background for sent messages */
+}
+
+/* Message Status */
+.message-status {
+  font-size: 0.75rem;
+  color: gray;
+  opacity: 1;
+  transition: opacity 0.2s ease;
 }

@@ -10,8 +10,6 @@ const getConversation = async (conversationId: string): Promise<Conversation | n
         id: conversationId
       }
     })
-    console.log('\x1b[34m%s\x1b[0m', 'conversation found.')
-
     return conversation
   } catch (error) {
     console.error('Error finding conversation:', error)
@@ -61,10 +59,8 @@ const getOrCreateConversation = async (conversationId: string, users: string[]):
   let conversation: Conversation | null
 
   if (conversationId === null) {
-    console.log('\x1b[34m%s\x1b[0m', 'conversationId is null. Creating new one.')
     conversation = await createConversation(users)
   } else {
-    console.log('\x1b[34m%s\x1b[0m', 'conversationId exists. Finding conversation.')
     conversation = await getConversation(conversationId)
   }
 

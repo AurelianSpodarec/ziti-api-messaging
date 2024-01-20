@@ -11,7 +11,6 @@ export const sendDirectMessage = async (data: MessageData, socket: Socket, onlin
   const { senderId, recipientId, conversationId, message } = data
 
   try {
-    console.log('\x1b[34m%s\x1b[0m', 'About to create conversation. or not.')
     const conversation = await getOrCreateConversation(conversationId, [senderId, recipientId])
     if (conversation === null) {
       throw new Error('Conversation not found or could not be created.')
@@ -26,19 +25,15 @@ export const sendDirectMessage = async (data: MessageData, socket: Socket, onlin
       // ... add other fields as necessary ...
     })
 
-    console.log('\x1b[34m%s\x1b[0m', 'About to save to mongo...')
     const savedMessage = await newMessage.save()
-    const messageId = savedMessage.id
-    console.log('\x1b[34m%s\x1b[0m', 'Message saved successfully:', messageId)
+    const messageId: string = savedMessage.id
+    console.log('\x1b[34m%s\x1b[0m', 'Message saved to MongoDB:', messageId)
+
+    // Emit sent-message-id to the sender
+    socket.emit('sent-message-id', { messageId })
 
     // Send message to recipient if online
-    console.log('\x1b[34m%s\x1b[0m', 'Online users:', onlineUsers)
-    console.log('Keys in onlineUsers:', [...onlineUsers.keys()].map(key => ({ key, type: typeof key })))
-    console.log('Looking for:', recipientId, ', Type:', typeof recipientId)
-
-    console.log('\x1b[34m%s\x1b[0m', 'looking for: ', recipientId)
     const recipientSocketId = onlineUsers.get(recipientId)
-    console.log('Attempting to find socket for recipientId:', recipientId, 'Found:', recipientSocketId)
     if (recipientSocketId !== undefined) {
       console.log('\x1b[34m%s\x1b[0m', 'sending private message to: ', recipientSocketId)
       socket.to(recipientSocketId).emit('private_message', {

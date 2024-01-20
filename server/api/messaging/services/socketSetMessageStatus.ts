@@ -37,7 +37,6 @@ export const setMessageStatus = async (messageStatusData: MessageStatusData, soc
       }
     }
 
-    // console.log('Message status updated successfully:', updatedMessage)
     console.log('Message status updated successfully.')
   } catch (error) {
     // Error handling

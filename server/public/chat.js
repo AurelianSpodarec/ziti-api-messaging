@@ -74,12 +74,27 @@ document.addEventListener("DOMContentLoaded", () => {
       // Handle incoming private messages
       socket.on("private_message", (msg) => {
         console.log("Message received:", msg);
+
+        // Remove the status from the last sent message
+        removeLastMessageStatus();
+  
+        // Create a container for the received message
+        var receivedContainer = document.createElement("div");
+        receivedContainer.classList.add("received-container");
+
+        // Create the actual message div
         var msgDiv = document.createElement("div");
         msgDiv.textContent = msg.message;
         msgDiv.setAttribute("data-message-id", msg.messageId);
-        msgDiv.classList.add("received"); // Add class for styling
-        messagesDiv.appendChild(msgDiv);
+        msgDiv.classList.add("received-message");
+
+        // Append the message div to the container
+        receivedContainer.appendChild(msgDiv);
+
+        // Append the container to the messages div
+        messagesDiv.appendChild(receivedContainer);
         scrollToBottom();
+
         if (msg.messageId && !msgDiv.hasAttribute("data-read-emitted")) {
           readObserver.observe(msgDiv); // Observe new message for read receipt
         }
@@ -87,8 +102,13 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       socket.on("message-status-updated", (data) => {
+        updateMessageStatus(data.messageId, data.status);
         // Log the updated status of the message
         console.log("Message status updated:", data.messageId, "Status:", data.status);
+      });
+
+      socket.on("sent-message-id", (data) => {
+        console.log("Sent message ID:", data.messageId);
       });
     } else {
       socket.emit("register", { userId: userIdSelect.value });
@@ -103,6 +123,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Function to send a message
   function sendMessage() {
     var message = messageInput.value;
+
     socket.emit("private_message", {
       senderId: userIdSelect.value,
       recipientId: recipientIdSelect.value,
@@ -110,11 +131,25 @@ document.addEventListener("DOMContentLoaded", () => {
       message: message,
     });
 
+    // Remove the status from the last sent message
+    removeLastMessageStatus();
+
     // Display the sent message
+    var messageContainer = document.createElement("div");
+    messageContainer.classList.add("sent-container"); // Add class for the message container
+
     var sentMsgDiv = document.createElement("div");
     sentMsgDiv.textContent = message;
-    sentMsgDiv.classList.add("sent"); // Add class for styling
-    messagesDiv.appendChild(sentMsgDiv);
+    sentMsgDiv.classList.add("sent-message"); // Add class for styling
+    messageContainer.appendChild(sentMsgDiv);
+
+    // Create and append status span
+    var statusSpan = document.createElement("span");
+    statusSpan.classList.add("message-status");
+    statusSpan.textContent = "Sent"; // Default status
+    messageContainer.appendChild(statusSpan);
+    messagesDiv.appendChild(messageContainer);
+
     scrollToBottom();
     messageInput.value = ''; // Clear the input field after sending
   }
@@ -126,4 +161,37 @@ document.addEventListener("DOMContentLoaded", () => {
       sendMessage();
     }
   });
+
+  function removeLastMessageStatus() {
+    // Target the last sent-container
+    var messagesDiv = document.getElementById("messages");
+    var lastSentContainer = messagesDiv.querySelector(".sent-container:last-child");
+    // var lastSentContainer = document.getElementById("messages").querySelector(".sent-container:last-child");
+    if (lastSentContainer) {
+      var statusSpan = lastSentContainer.querySelector(".message-status");
+      if (statusSpan) {
+        statusSpan.remove();
+      }
+    }
+  }
+
+  function updateMessageStatus (messageId, status) {
+    // Target the last sent-container
+    var messagesDiv = document.getElementById("messages");
+    var lastSentContainer = messagesDiv.querySelector(".sent-container:last-child");
+    // var lastSentContainer = document.getElementById("messages").querySelector(".sent-container");
+    if (lastSentContainer) {
+      var statusSpan = lastSentContainer.querySelector(".message-status");
+      if (statusSpan) {
+        // Fade out the status
+        statusSpan.style.opacity = '0';
+
+        // After transition duration, change the text and fade it back in
+        setTimeout(() => {
+          statusSpan.textContent = status;
+          statusSpan.style.opacity = '1';
+        }, 200); // This duration should match the CSS transition duration
+      }
+    }
+  }
 });
