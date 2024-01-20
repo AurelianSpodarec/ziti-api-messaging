@@ -62,7 +62,8 @@ document.addEventListener("DOMContentLoaded", () => {
   userIdSelect.addEventListener("change", function () {
     // Create or update socket connection when a user is selected
     if (socket === null) {
-      socket = io("http://localhost:3002");
+      // socket = io("http://localhost:3002");
+      socket = io("ws://localhost:3002");
 
       // Handle socket connection events
       socket.on("connect", () => {
