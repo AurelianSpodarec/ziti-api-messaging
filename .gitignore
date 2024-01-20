@@ -7,6 +7,7 @@ node_modules
 *.d.ts
 # Except for bootstrap.js
 !bootstrap.js
+!chat.js
 
 # Ignore log files and runtime data
 logs
