@@ -1,0 +1,64 @@
+body {
+  background-color: #121212; /* Dark background for dark mode */
+  color: white;
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  margin: 0;
+}
+
+h1 {
+  color: #007bff;
+}
+
+#messages {
+  background-color: #1e1e1e; /* Darker background for the message area */
+  border: 1px solid #333;
+  padding: 10px;
+  margin-top: 20px;
+  height: 300px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.input-field,
+#sendButton {
+  margin: 5px;
+  padding: 10px;
+  border: 1px solid #333;
+  background: #252525; /* Dark input fields */
+  color: white; /* Light text */
+  border-radius: 4px;
+}
+
+#sendButton {
+  background-color: #28a745;
+  color: white;
+  border-color: #28a745;
+  cursor: pointer;
+}
+
+#sendButton:hover {
+  background-color: #218838;
+}
+
+#messages div {
+  padding: 10px 15px;
+  margin: 10px 5px;
+  border-radius: 20px;
+  max-width: 60%;
+}
+
+/* Style for sent messages */
+.sent {
+  background-color: #007bff; /* Blue background for sent messages */
+  color: white;
+  align-self: flex-end; /* Align to the right */
+}
+
+/* Style for received messages */
+.received {
+  background-color: #333; /* Gray background for received messages */
+  color: white;
+  align-self: flex-start; /* Align to the left */
+}
