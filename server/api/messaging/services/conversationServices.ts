@@ -2,18 +2,36 @@
 
 import Conversation from '../models/conversationModel'
 import User from 'server/api/messaging/models/userModel'
+import { Message, type IMessage } from '../models/messageModel'
 
-const getConversation = async (conversationId: string): Promise<Conversation | null> => {
+const getConversation = async (
+  conversationId: string,
+  page: number = 1,
+  limit: number = 20
+): Promise<{
+  conversation: Conversation | null
+  messages: IMessage[] | null
+  totalPages: number
+  totalMessages: number
+}> => {
   try {
     const conversation = await Conversation.findOne({
-      where: {
-        id: conversationId
-      }
+      where: { id: conversationId }
     })
-    return conversation
+    if (conversation === null) return { conversation: null, messages: null, totalPages: 0, totalMessages: 0 }
+
+    const totalMessages = await Message.countDocuments({ conversationId })
+    const totalPages = Math.ceil(totalMessages / limit)
+
+    const messages = await Message.find({ conversationId })
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * limit)
+      .limit(limit)
+
+    return { conversation, messages, totalPages, totalMessages }
   } catch (error) {
     console.error('Error finding conversation:', error)
-    return null
+    return { conversation: null, messages: null, totalPages: 0, totalMessages: 0 }
   }
 }
 
@@ -32,7 +50,7 @@ const getConversations = async (userId: string): Promise<Conversation | null> =>
   }
 }
 
-const createConversation = async (users: string[]): Promise<Conversation | null> => {
+const createConversation = async (users: string[]): Promise<{ conversation: Conversation | null, messages: IMessage[] | null }> => {
   try {
     const conversation = await Conversation.create(
       {
@@ -48,17 +66,22 @@ const createConversation = async (users: string[]): Promise<Conversation | null>
     )
     console.log('\x1b[34m%s\x1b[0m', 'conversation created.', conversation)
 
-    return conversation
+    return { conversation, messages: null }
   } catch (error) {
     console.error('Error creating conversation', error)
-    return null
+    return { conversation: null, messages: null }
   }
 }
 
-const getOrCreateConversation = async (conversationId: string, users: string[]): Promise<Conversation | null> => {
-  let conversation: Conversation | null
-
-  if (conversationId === null) {
+const getOrCreateConversation = async (
+  conversationId: string,
+  users: string[]
+): Promise<{
+  conversation: Conversation | null
+  messages: IMessage[] | null
+}> => {
+  let conversation: { conversation: Conversation | null, messages: IMessage[] | null }
+  if (conversationId === null || conversationId === undefined || conversationId === '') {
     conversation = await createConversation(users)
   } else {
     conversation = await getConversation(conversationId)

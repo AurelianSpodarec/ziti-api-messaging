@@ -61,7 +61,7 @@ enum MessageStatus {
   Read = 'Read'
 }
 
-interface IMessage extends Document {
+export interface IMessage extends Document {
   conversationId: string
   senderId: string
   recipientId: string

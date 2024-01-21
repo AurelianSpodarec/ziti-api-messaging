@@ -1,6 +1,6 @@
 // server/server.ts
 
-import express, { type Request, type Response } from 'express'
+import express from 'express'
 import { getRequiredEnvVariable } from './utils/getRequiredEnvVariable'
 import cors from 'cors'
 import { createServer } from 'http'
@@ -10,7 +10,8 @@ import { consoleLogging } from './middleware/consoleLogging'
 import customPoweredBy from './middleware/customPoweredBy'
 import initPostgres from './messagesPostgres'
 import initMongo from './messagesMongo'
-import path from 'path'
+import routes from './routes'
+import { handle404 } from './middleware/handle404'
 
 // CORS options configuration
 const corsOptions = {
@@ -77,13 +78,11 @@ initMongo()
     process.exit(1)
   })
 
-app.use('/public', express.static(path.join(__dirname, 'public')), (req: Request, res: Response) => {
-  res.status(404).send('404: File Not Found')
-})
+// Routes
+app.use(routes)
 
-app.get('/', (req: Request, res: Response) => {
-  res.status(204).end()
-})
+// 404 logging
+app.use(handle404)
 
 const host = getRequiredEnvVariable('HOST')
 const port = getRequiredEnvVariable('PORT')

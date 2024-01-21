@@ -4,6 +4,7 @@ import { type Request, type Response } from 'express'
 import { getConversations, getConversation, createConversation } from '../services/conversationServices'
 import { type UniqueConstraintError } from 'sequelize'
 import { type AuthenticatedRequest } from 'server/types/authenticatedRequest'
+import { parseQueryParam } from 'server/utils/parseQueryParam'
 
 export async function conversations (req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
@@ -31,10 +32,12 @@ export async function conversations (req: AuthenticatedRequest, res: Response): 
 }
 
 export async function conversation (req: Request, res: Response): Promise<void> {
-  const slug = req.params.slug
+  const conversationId = req.query.c as string
+  const page = parseQueryParam(req.query.page as string, 1)
+  const limit = parseQueryParam(req.query.limit as string, 20)
 
   try {
-    const conversation = await getConversation(slug)
+    const conversation = await getConversation(conversationId, page, limit)
     if (conversation === null) {
       console.log('\x1b[31m404 Not Found. Conversation not found.\x1b[0m')
       res.sendStatus(404)

@@ -12,13 +12,13 @@ export const sendDirectMessage = async (data: MessageData, socket: Socket, onlin
 
   try {
     const conversation = await getOrCreateConversation(conversationId, [senderId, recipientId])
-    if (conversation === null) {
+    if (conversation?.conversation === null) {
       throw new Error('Conversation not found or could not be created.')
     }
 
     // Save message using Mongoose
     const newMessage = new Message({
-      conversationId: conversation.id,
+      conversationId: conversation.conversation.id,
       senderId,
       recipientId,
       textContent: message
