@@ -17,8 +17,6 @@ export const setMessageStatus = async (
       throw new Error('Invalid message status data')
     }
 
-    console.log('Updating status for:', messageId, 'to:', status)
-
     // Find the message by ID and update its status
     const updatedMessage = await Message.findByIdAndUpdate(
       messageId,
@@ -38,8 +36,6 @@ export const setMessageStatus = async (
         io.to(senderSocketId).emit('message-status-updated', { messageId, status })
       }
     }
-
-    console.log('Message status updated successfully.')
   } catch (error) {
     // Error handling
     if (error instanceof Error) {
@@ -50,5 +46,4 @@ export const setMessageStatus = async (
       socket.emit('set-message-status-error', { error: 'An unknown error occurred' })
     }
   }
-  console.log('\n')
 }

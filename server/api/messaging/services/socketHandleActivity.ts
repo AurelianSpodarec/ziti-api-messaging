@@ -1,3 +1,5 @@
+// server/api/messaging/services/socketHandleActivity.ts
+
 import { type Server as SocketIOServer, type Socket } from 'socket.io'
 
 export const handleActivity = async (
@@ -11,9 +13,8 @@ export const handleActivity = async (
     const recipientSocketId = onlineUsers.get(recipientId as string)
     if (recipientSocketId !== undefined) {
       io.to(recipientSocketId).emit('activity', userId)
-      console.log('activity', userId, 'to', recipientId)
     } else {
-      console.log(`Recipient (${recipientId}) is not online.`)
+      // console.log(`Recipient (${recipientId}) is not online.`)
     }
   } catch (error) {
     // Error handling
@@ -25,5 +26,4 @@ export const handleActivity = async (
       socket.emit('handle-activity-error', { error: 'An unknown error occurred' })
     }
   }
-  console.log('\n')
 }

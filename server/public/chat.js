@@ -74,8 +74,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Handle incoming private messages
       socket.on("private_message", (msg) => {
-        console.log("Message received:", msg);
-
         document.querySelector('.activity').textContent = ""
 
         // Remove the status from the last sent message
@@ -106,8 +104,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
       socket.on("message-status-updated", (data) => {
         updateMessageStatus(data.messageId, data.status);
-        // Log the updated status of the message
-        console.log("Message status updated:", data.messageId, "Status:", data.status);
       });
 
       socket.on("sent-message-id", (data) => {
@@ -148,34 +144,36 @@ document.addEventListener("DOMContentLoaded", () => {
   function sendMessage() {
     var message = messageInput.value;
 
-    socket.emit("private_message", {
-      senderId: userIdSelect.value,
-      recipientId: recipientIdSelect.value,
-      conversationId: conversationIdInput.value,
-      message: message,
-    });
+    if (message.length > 0) {
+      socket.emit("private_message", {
+        senderId: userIdSelect.value,
+        recipientId: recipientIdSelect.value,
+        conversationId: conversationIdInput.value,
+        message: message,
+      });
 
-    // Remove the status from the last sent message
-    removeLastMessageStatus();
+      // Remove the status from the last sent message
+      removeLastMessageStatus();
 
-    // Display the sent message
-    var messageContainer = document.createElement("div");
-    messageContainer.classList.add("sent-container"); // Add class for the message container
+      // Display the sent message
+      var messageContainer = document.createElement("div");
+      messageContainer.classList.add("sent-container"); // Add class for the message container
 
-    var sentMsgDiv = document.createElement("div");
-    sentMsgDiv.textContent = message;
-    sentMsgDiv.classList.add("sent-message"); // Add class for styling
-    messageContainer.appendChild(sentMsgDiv);
+      var sentMsgDiv = document.createElement("div");
+      sentMsgDiv.textContent = message;
+      sentMsgDiv.classList.add("sent-message"); // Add class for styling
+      messageContainer.appendChild(sentMsgDiv);
 
-    // Create and append status span
-    var statusSpan = document.createElement("span");
-    statusSpan.classList.add("message-status");
-    statusSpan.textContent = "Sent"; // Default status
-    messageContainer.appendChild(statusSpan);
-    messagesDiv.appendChild(messageContainer);
+      // Create and append status span
+      var statusSpan = document.createElement("span");
+      statusSpan.classList.add("message-status");
+      statusSpan.textContent = "Sent"; // Default status
+      messageContainer.appendChild(statusSpan);
+      messagesDiv.appendChild(messageContainer);
 
-    scrollToBottom();
-    messageInput.value = ''; // Clear the input field after sending
+      scrollToBottom();
+      messageInput.value = ''; // Clear the input field after sending
+    }
   }
 
   // Event listener to send message when Enter key is pressed
