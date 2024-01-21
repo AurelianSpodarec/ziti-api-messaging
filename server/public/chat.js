@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (entry.isIntersecting && document.hasFocus()) {
           // Emit messageStatus event for the visible message
           const messageId = entry.target.getAttribute("data-message-id");
-          socket.emit("messageStatus", { messageId: messageId, status: 'read' });
+          socket.emit("messageStatus", { messageId: messageId, status: 'Read' });
           observer.unobserve(entry.target); // Stop observing the target
         }
       });
@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
       ) {
         // Emit messageStatus for visible messages when window gains focus
         const messageId = msgDiv.getAttribute("data-message-id");
-        socket.emit("messageStatus", { messageId: messageId, status: 'read' });
+        socket.emit("messageStatus", { messageId: messageId, status: 'Read' });
         msgDiv.setAttribute("data-read-emitted", "true"); // Mark as read
       }
     });
@@ -75,6 +75,8 @@ document.addEventListener("DOMContentLoaded", () => {
       // Handle incoming private messages
       socket.on("private_message", (msg) => {
         console.log("Message received:", msg);
+
+        document.querySelector('.activity').textContent = ""
 
         // Remove the status from the last sent message
         removeLastMessageStatus();
@@ -99,7 +101,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (msg.messageId && !msgDiv.hasAttribute("data-read-emitted")) {
           readObserver.observe(msgDiv); // Observe new message for read receipt
         }
-        socket.emit("messageStatus", { messageId: msg.messageId, status: 'delivered' });
+        socket.emit("messageStatus", { messageId: msg.messageId, status: 'Delivered' });
       });
 
       socket.on("message-status-updated", (data) => {
@@ -111,6 +113,17 @@ document.addEventListener("DOMContentLoaded", () => {
       socket.on("sent-message-id", (data) => {
         console.log("Sent message ID:", data.messageId);
       });
+
+      let activityTimer
+      socket.on("activity", (userId) => {
+        document.querySelector('.activity').textContent = `${userId.slice(-4)} is typing...`
+
+          // Clear after 3 seconds 
+          clearTimeout(activityTimer)
+          activityTimer = setTimeout(() => {
+            document.querySelector('.activity').textContent = ""
+          }, 2000)
+      })
     } else {
       socket.emit("register", { userId: userIdSelect.value });
     }
@@ -120,6 +133,16 @@ document.addEventListener("DOMContentLoaded", () => {
   sendButton.addEventListener("click", function () {
     sendMessage();
   });
+
+  message.addEventListener('keypress', (e) => {
+    if (e.key !== "Enter") {
+      socket.emit('activity', {
+        type: 'typing',
+        userId: userIdSelect.value,
+        recipientId: recipientIdSelect.value,
+      });
+    }
+  })
 
   // Function to send a message
   function sendMessage() {

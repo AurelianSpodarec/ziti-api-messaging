@@ -56,9 +56,9 @@ interface IReply extends Document {
 }
 
 enum MessageStatus {
-  Sent = 'sent',
-  Delivered = 'delivered',
-  Read = 'read'
+  Sent = 'Sent',
+  Delivered = 'Delivered',
+  Read = 'Read'
 }
 
 interface IMessage extends Document {
