@@ -14,7 +14,7 @@ export const registerUser = async (data: RegisterData, socket: Socket, onlineUse
     onlineUsers.set(userId, socket.id) // Update or add new user with current socket ID
     userSockets.set(socket.id, userId) // Store or update the reverse mapping
 
-    console.log('\n\x1b[32m%s\x1b[0m', `Registered user: \x1b[34m${data.userId}\x1b[0m with socket id: \x1b[34m${socket.id}\x1b[0m...`)
+    console.log('\x1b[32m%s\x1b[0m', `Registered user: \x1b[34m${data.userId}\x1b[0m with socket id: \x1b[34m${socket.id}\x1b[0m...`)
 
   // check the users database for this userId, add if doesn't exist.
   } catch (error) {

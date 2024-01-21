@@ -15,7 +15,7 @@ const userSockets = new Map<string, string>() // Maps socketId to userId
 
 export const socketHandlers = (io: SocketIOServer): void => {
   io.on('connection', (socket: Socket) => {
-    console.log('\n\x1b[34m%s\x1b[0m', 'User connected with socket ID: ', socket.id, '\n')
+    console.log('\x1b[34m%s\x1b[0m', 'User connected with socket ID: ', socket.id)
 
     socket.on('register', async (data: RegisterData) => {
       await registerUser(data, socket, onlineUsers, userSockets)

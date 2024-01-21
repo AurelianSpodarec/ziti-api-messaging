@@ -26,7 +26,7 @@ const sequelizeMsg = new Sequelize(
   }
 )
 
-// console.log("\nsequelizeMsg: ", sequelizeMsg.config);
+// console.log("sequelizeMsg: ", sequelizeMsg.config);
 
 // Initialize the models
 // Message
