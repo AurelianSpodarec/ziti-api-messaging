@@ -45,12 +45,12 @@ document.addEventListener('DOMContentLoaded', () => {
       messageContainer.classList.add(msg.senderId === userIdSelect.value ? 'sent-container' : 'received-container')
 
       const msgDiv = document.createElement('div')
-      msgDiv.setAttribute('data-message-id', msg._id)
+      msgDiv.setAttribute('message-id', msg._id)
       msgDiv.textContent = msg.textContent
       msgDiv.classList.add(msg.senderId === userIdSelect.value ? 'sent-message' : 'received-message')
 
       if (msg.status === 'Read') {
-        msgDiv.setAttribute('data-read-emitted', 'true')
+        msgDiv.setAttribute('read-emitted', 'true')
       }
 
       if (msg.senderId !== userIdSelect.value && msg.status !== 'Read') { // Check if it's an unread received messsage
@@ -85,9 +85,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (entry.isIntersecting && document.hasFocus()) {
           // Ensure the target is a received message and not yet marked as read
           if (isReceivedMessage(entry.target) && !isReadEmitted(entry.target)) {
-            const messageId = entry.target.getAttribute('data-message-id')
+            const messageId = entry.target.getAttribute('message-id')
             socket.emit('messageStatus', { messageId, status: 'Read' })
-            entry.target.setAttribute('data-read-emitted', 'true')
+            entry.target.setAttribute('read-emitted', 'true')
             observer.unobserve(entry.target) // Stop observing the target
           }
         }
@@ -103,8 +103,8 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function isReadEmitted (element) {
-    // Check if 'data-read-emitted' attribute is present and true
-    return element.getAttribute('data-read-emitted') === 'true'
+    // Check if 'read-emitted' attribute is present and true
+    return element.getAttribute('read-emitted') === 'true'
   }
 
   // Initialize the read receipt observer
@@ -113,11 +113,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // Event listener to handle message reads when window gains focus
   window.addEventListener('focus', () => {
     document.querySelectorAll('#messages .received-container .received-message').forEach((msgDiv) => {
-      if (isVisible(msgDiv) && !msgDiv.hasAttribute('data-read-emitted')) {
+      if (isVisible(msgDiv) && !msgDiv.hasAttribute('read-emitted')) {
         // Emit messageStatus for visible messages when window gains focus
-        const messageId = msgDiv.getAttribute('data-message-id')
+        const messageId = msgDiv.getAttribute('message-id')
         socket.emit('messageStatus', { messageId, status: 'Read' })
-        msgDiv.setAttribute('data-read-emitted', 'true') // Mark as read
+        msgDiv.setAttribute('read-emitted', 'true') // Mark as read
       }
     })
   })
@@ -158,7 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Create the actual message div
         const msgDiv = document.createElement('div')
         msgDiv.textContent = msg.message
-        msgDiv.setAttribute('data-message-id', msg.messageId)
+        msgDiv.setAttribute('message-id', msg.messageId)
         msgDiv.classList.add('received-message')
 
         // Append the message div to the container
@@ -168,7 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
         messagesDiv.appendChild(receivedContainer)
         scrollToBottom()
 
-        if (msg.messageId && !msgDiv.hasAttribute('data-read-emitted')) {
+        if (msg.messageId && !msgDiv.hasAttribute('read-emitted')) {
           readObserver.observe(msgDiv) // Observe new message for read receipt
         }
         socket.emit('messageStatus', { messageId: msg.messageId, status: 'Delivered' })
@@ -277,7 +277,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const lastSentMsgDiv = lastSentContainer.querySelector('.sent-message')
 
       // Check if the last message's ID matches the provided messageId
-      if (lastSentMsgDiv && lastSentMsgDiv.getAttribute('data-message-id') === messageId) {
+      if (lastSentMsgDiv && lastSentMsgDiv.getAttribute('message-id') === messageId) {
         const statusSpan = lastSentContainer.querySelector('.message-status')
 
         // If there is no status span, create it
@@ -302,8 +302,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const lastSentContainer = messagesDiv.querySelector('.sent-container:last-child')
     if (lastSentContainer) {
       const lastSentMsgDiv = lastSentContainer.querySelector('.sent-message')
-      if (lastSentMsgDiv && !lastSentMsgDiv.hasAttribute('data-message-id')) {
-        lastSentMsgDiv.setAttribute('data-message-id', messageId)
+      if (lastSentMsgDiv && !lastSentMsgDiv.hasAttribute('message-id')) {
+        lastSentMsgDiv.setAttribute('message-id', messageId)
       }
     }
   }
@@ -311,10 +311,10 @@ document.addEventListener('DOMContentLoaded', () => {
   // Call this function after messages are loaded/displayed and on scroll
   function emitReadStatusForVisibleMessages () {
     document.querySelectorAll('#messages .received-container .received-message').forEach((msgDiv) => {
-      if (isVisible(msgDiv) && !msgDiv.hasAttribute('data-read-emitted')) {
-        const messageId = msgDiv.getAttribute('data-message-id')
+      if (isVisible(msgDiv) && !msgDiv.hasAttribute('read-emitted')) {
+        const messageId = msgDiv.getAttribute('message-id')
         socket.emit('messageStatus', { messageId, status: 'Read' })
-        msgDiv.setAttribute('data-read-emitted', 'true')
+        msgDiv.setAttribute('read-emitted', 'true')
       }
     })
   }
