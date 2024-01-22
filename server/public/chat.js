@@ -53,6 +53,10 @@ document.addEventListener('DOMContentLoaded', () => {
         msgDiv.setAttribute('data-read-emitted', 'true')
       }
 
+      if (msg.senderId !== userIdSelect.value && msg.status !== 'Read') { // Check if it's an unread received messsage
+        readObserver.observe(msgDiv) // Start observing the message for visibility
+      }
+
       messageContainer.appendChild(msgDiv)
 
       if (msg.senderId === userIdSelect.value && msg._id === lastSentMessageId) {
@@ -304,6 +308,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // Call this function after messages are loaded/displayed and on scroll
   function emitReadStatusForVisibleMessages () {
     document.querySelectorAll('#messages .received-container .received-message').forEach((msgDiv) => {
       if (isVisible(msgDiv) && !msgDiv.hasAttribute('data-read-emitted')) {
@@ -313,6 +318,9 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     })
   }
+
+  // Add a scroll event listener to the messagesDiv
+  messagesDiv.addEventListener('scroll', emitReadStatusForVisibleMessages)
 
   function isVisible (element) {
     const rect = element.getBoundingClientRect()
