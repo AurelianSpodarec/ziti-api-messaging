@@ -6,7 +6,6 @@ import config from './config/postgres'
 // Messaging
 import { initUser } from './api/messaging/models/userModel'
 import { initConversation } from './api/messaging/models/conversationModel'
-import { initUnreadMessage } from './api/messaging/models/unreadMessageModel'
 
 // Initialize Sequelize instance
 const sequelizeMsg = new Sequelize(
@@ -32,12 +31,10 @@ const sequelizeMsg = new Sequelize(
 // Message
 const User = initUser(sequelizeMsg)
 const Conversation = initConversation(sequelizeMsg)
-const UnreadMessage = initUnreadMessage(sequelizeMsg)
 
 // Define associations (order is important)
-User.associate({ Conversation, UnreadMessage })
-Conversation.associate({ User, UnreadMessage })
-UnreadMessage.associate({ User, Conversation })
+User.associate({ Conversation })
+Conversation.associate({ User })
 
 // Initialize the db object
 const initPostgres: any = {

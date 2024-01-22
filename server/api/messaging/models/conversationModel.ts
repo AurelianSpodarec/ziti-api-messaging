@@ -2,7 +2,6 @@
 
 import { Model, DataTypes, type Sequelize } from 'sequelize'
 import type User from './userModel'
-import type UnreadMessage from './unreadMessageModel'
 
 // Extend Model class for TypeScript typing
 class Conversation extends Model {
@@ -15,9 +14,10 @@ class Conversation extends Model {
   declare readonly createdAt?: Date
   declare readonly updatedAt?: Date
 
-  public static associate (models: { User: typeof User, UnreadMessage: typeof UnreadMessage }): void {
+  public static associate (models: {
+    User: typeof User
+  }): void {
     Conversation.belongsToMany(models.User, { through: 'Users_Conversations' })
-    Conversation.hasMany(models.UnreadMessage, { foreignKey: 'conversationId' })
   }
 }
 
