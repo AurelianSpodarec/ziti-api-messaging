@@ -15,7 +15,6 @@ const getConversation = async (
   totalPages: number
   totalMessages: number
 }> => {
-  console.log('getConversation')
   try {
     const userWithConversation = await User.findOne({
       where: { id: userId },
@@ -24,8 +23,6 @@ const getConversation = async (
         where: { id: conversationId }
       }]
     })
-
-    // console.log('userWithConversation.dataValues.Conversations[0]: ', userWithConversation?.dataValues.Conversations[0])
 
     if (userWithConversation?.dataValues.Conversations === undefined || userWithConversation?.dataValues.Conversations?.length === 0) {
       console.log('No conversations found')
