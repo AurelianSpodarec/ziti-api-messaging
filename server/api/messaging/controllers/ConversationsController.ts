@@ -1,7 +1,7 @@
 // server/api/blog/controllers/conversationsController.ts
 
 import { type Request, type Response } from 'express'
-import { getConversations, getConversation, createConversation } from '../services/conversationServices'
+import { getConversations, getConversation, createConversation, getUnread } from '../services/conversationServices'
 import { type UniqueConstraintError } from 'sequelize'
 import { type AuthenticatedRequest } from 'server/types/authenticatedRequest'
 import { parseQueryParam } from 'server/utils/parseQueryParam'
@@ -75,5 +75,24 @@ export async function createConversations (req: AuthenticatedRequest, res: Respo
     } else {
       res.status(500).send({ error: 'Problem creating conversation.' })
     }
+  }
+}
+
+export async function unread (req: Request, res: Response): Promise<void> {
+  const userId = req.query.u as string
+
+  try {
+    const unread = await getUnread(userId)
+    if (unread === null) {
+      console.log('\x1b[31m404 Not Found. Unread not found.\x1b[0m')
+      res.sendStatus(404)
+      return
+    }
+    console.log('\x1b[32m200 OK. Sending unread data.\x1b[0m')
+    res.json(unread)
+  } catch (e) {
+    const error = e as Error
+    console.error(error.message)
+    res.status(500).send({ error: 'Problem fetching conversations.' })
   }
 }

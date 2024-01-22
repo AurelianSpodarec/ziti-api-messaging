@@ -90,6 +90,58 @@ const getOrCreateConversation = async (
   return conversation
 }
 
+// Function to get unread message count for each conversation for a user
+const getUnread = async (userId: string): Promise<Record<string, number>> => {
+  try {
+    // Use optional chaining to avoid null checks
+    const userConversations = await User.findOne({
+      where: { id: userId },
+      include: [Conversation]
+    })
+
+    // console.log('User conversations: ', userConversations)
+
+    // Return early if no conversations found
+    if (userConversations?.dataValues.Conversations === undefined) {
+      return {}
+    }
+
+    const unreadCounts: Record<string, number> = {}
+
+    for (const conversation of userConversations.dataValues.Conversations) {
+      try {
+        console.log('Conversation: ', conversation.id)
+        // Use optional chaining for conversation and id access
+        const conversationId = conversation?.id
+
+        if (conversationId === undefined) {
+          continue // Skip iteration if conversation id is undefined
+        }
+
+        const unreadCount = await Message.countDocuments({
+          conversationId,
+          status: { $ne: 'Read' },
+          senderId: { $ne: userId }
+        }).exec()
+
+        console.log('Unread count: ', unreadCount)
+
+        unreadCounts[conversationId] = unreadCount
+      } catch (error) {
+        console.error(
+          `Error getting unread messages for conversation ${conversation.id}`,
+          error
+        )
+      }
+    }
+
+    return unreadCounts
+  } catch (error) {
+    console.error('Error in getUnread:', error)
+    return {}
+  }
+}
+
 export {
-  getOrCreateConversation, getConversation, getConversations, createConversation
+  getOrCreateConversation, getConversation, getConversations, createConversation, getUnread
 }
