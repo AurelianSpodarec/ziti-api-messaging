@@ -1,26 +1,80 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener('DOMContentLoaded', () => {
   // DOM element references
-  var conversationIdInput = document.getElementById("conversationId");
-  var userIdSelect = document.getElementById("userId");
-  var recipientIdSelect = document.getElementById("recipientId");
-  var messageInput = document.getElementById("message");
-  var sendButton = document.getElementById("sendButton");
-  var messagesDiv = document.getElementById("messages");
+  const conversationIdInput = document.getElementById('conversationId')
+  const userIdSelect = document.getElementById('userId')
+  const recipientIdSelect = document.getElementById('recipientId')
+  const messageInput = document.getElementById('message')
+  const sendButton = document.getElementById('sendButton')
+  const messagesDiv = document.getElementById('messages')
 
   // Socket.io related variables
-  var socket = null; // Socket.io connection instance
-  var mySocketId = ""; // Variable to store the socket ID
+  let socket = null // Socket.io connection instance
+  let mySocketId = '' // Variable to store the socket ID
 
-  function scrollToBottom() {
-    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+  function scrollToBottom () {
+    messagesDiv.scrollTop = messagesDiv.scrollHeight
+  }
+
+  // Function to fetch and display messages
+  async function fetchAndDisplayMessages (conversationId) {
+    if (!userIdSelect.value) return // Exit if no user is selected
+
+    try {
+      const response = await fetch(`http://localhost:3002/conversation?c=${conversationId}&page=1&limit=20`)
+      if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`)
+      const data = await response.json()
+      displayMessages(data.messages)
+    } catch (error) {
+      console.error('Error fetching messages:', error)
+    }
+  }
+
+  // Function to display messages in the messagesDiv
+  function displayMessages (messages) {
+    messagesDiv.innerHTML = '' // Clear existing messages
+
+    let lastSentMessageId = ''
+    if (messages.length > 0 && messages[0].senderId === userIdSelect.value) {
+      // The first message in the array was sent by the current user
+      lastSentMessageId = messages[0]._id
+    }
+
+    // Reverse the messages array to start appending from the newest message
+    messages.slice().reverse().forEach((msg) => {
+      const messageContainer = document.createElement('div')
+      messageContainer.classList.add(msg.senderId === userIdSelect.value ? 'sent-container' : 'received-container')
+
+      const msgDiv = document.createElement('div')
+      msgDiv.setAttribute('data-message-id', msg._id)
+      msgDiv.textContent = msg.textContent
+      msgDiv.classList.add(msg.senderId === userIdSelect.value ? 'sent-message' : 'received-message')
+
+      if (msg.status === 'Read') {
+        msgDiv.setAttribute('data-read-emitted', 'true')
+      }
+
+      messageContainer.appendChild(msgDiv)
+
+      if (msg.senderId === userIdSelect.value && msg._id === lastSentMessageId) {
+        const statusSpan = document.createElement('span')
+        statusSpan.classList.add('message-status')
+        statusSpan.textContent = msg.status // Replace with actual status
+        messageContainer.appendChild(statusSpan)
+      }
+
+      messagesDiv.appendChild(messageContainer)
+    })
+
+    scrollToBottom()
+    emitReadStatusForVisibleMessages()
   }
 
   // Function to set up an IntersectionObserver for read receipt functionality
-  function setupReadObserver() {
+  function setupReadObserver () {
     const options = {
       root: null, // Use the viewport as the root
-      threshold: 1.0, // Require 100% of the target to be visible
-    };
+      threshold: 1.0 // Require 100% of the target to be visible
+    }
 
     // Observer checks each entry to see if it's intersecting (visible)
     const observer = new IntersectionObserver((entries, observer) => {
@@ -28,192 +82,229 @@ document.addEventListener("DOMContentLoaded", () => {
         // Check if the message is visible and the window is focused
         if (entry.isIntersecting && document.hasFocus()) {
           // Emit messageStatus event for the visible message
-          const messageId = entry.target.getAttribute("data-message-id");
-          socket.emit("messageStatus", { messageId: messageId, status: 'Read' });
-          observer.unobserve(entry.target); // Stop observing the target
+          const messageId = entry.target.getAttribute('data-message-id')
+          socket.emit('messageStatus', { messageId, status: 'Read' })
+          observer.unobserve(entry.target) // Stop observing the target
         }
-      });
-    }, options);
+      })
+    }, options)
 
-    return observer;
+    return observer
   }
 
   // Initialize the read receipt observer
-  var readObserver = setupReadObserver();
+  const readObserver = setupReadObserver()
 
   // Event listener to handle message reads when window gains focus
-  window.addEventListener("focus", () => {
-    document.querySelectorAll("#messages div").forEach((msgDiv) => {
+  window.addEventListener('focus', () => {
+    document.querySelectorAll('#messages .received-container .received-message').forEach((msgDiv) => {
       if (
-        msgDiv.getAttribute("data-message-id") &&
+        msgDiv.getAttribute('data-message-id') &&
         msgDiv.getBoundingClientRect().top >= 0 &&
         msgDiv.getBoundingClientRect().bottom <= window.innerHeight &&
-        !msgDiv.hasAttribute("data-read-emitted")
+        !msgDiv.hasAttribute('data-read-emitted')
       ) {
         // Emit messageStatus for visible messages when window gains focus
-        const messageId = msgDiv.getAttribute("data-message-id");
-        socket.emit("messageStatus", { messageId: messageId, status: 'Read' });
-        msgDiv.setAttribute("data-read-emitted", "true"); // Mark as read
+        const messageId = msgDiv.getAttribute('data-message-id')
+        socket.emit('messageStatus', { messageId, status: 'Read' })
+        msgDiv.setAttribute('data-read-emitted', 'true') // Mark as read
       }
-    });
-  });
+    })
+  })
 
   // Event listener to handle user selection changes
-  userIdSelect.addEventListener("change", function () {
+  userIdSelect.addEventListener('change', function () {
     // Create or update socket connection when a user is selected
     if (socket === null) {
       // socket = io("http://localhost:3002");
-      socket = io("ws://localhost:3002");
+      socket = io('ws://localhost:3002')
 
       // Handle socket connection events
-      socket.on("connect", () => {
-        mySocketId = socket.id; // Store the socket ID
-        console.log("Connected to server. Socket ID: ", mySocketId);
-        socket.emit("register", { userId: userIdSelect.value });
-      });
+      socket.on('connect', () => {
+        mySocketId = socket.id // Store the socket ID
+        console.log('Connected to server. Socket ID: ', mySocketId)
+        socket.emit('register', { userId: userIdSelect.value })
+        if (conversationIdInput.value) {
+          fetchAndDisplayMessages(conversationIdInput.value)
+        }
+      })
 
       // Handle incoming private messages
-      socket.on("private_message", (msg) => {
-        document.querySelector('.activity').textContent = ""
+      socket.on('private_message', (msg) => {
+        document.querySelector('.activity').textContent = ''
 
         // Remove the status from the last sent message
-        removeLastMessageStatus();
-  
+        removeLastMessageStatus()
+
         // Create a container for the received message
-        var receivedContainer = document.createElement("div");
-        receivedContainer.classList.add("received-container");
+        const receivedContainer = document.createElement('div')
+        receivedContainer.classList.add('received-container')
 
         // Create the actual message div
-        var msgDiv = document.createElement("div");
-        msgDiv.textContent = msg.message;
-        msgDiv.setAttribute("data-message-id", msg.messageId);
-        msgDiv.classList.add("received-message");
+        const msgDiv = document.createElement('div')
+        msgDiv.textContent = msg.message
+        msgDiv.setAttribute('data-message-id', msg.messageId)
+        msgDiv.classList.add('received-message')
 
         // Append the message div to the container
-        receivedContainer.appendChild(msgDiv);
+        receivedContainer.appendChild(msgDiv)
 
         // Append the container to the messages div
-        messagesDiv.appendChild(receivedContainer);
-        scrollToBottom();
+        messagesDiv.appendChild(receivedContainer)
+        scrollToBottom()
 
-        if (msg.messageId && !msgDiv.hasAttribute("data-read-emitted")) {
-          readObserver.observe(msgDiv); // Observe new message for read receipt
+        if (msg.messageId && !msgDiv.hasAttribute('data-read-emitted')) {
+          readObserver.observe(msgDiv) // Observe new message for read receipt
         }
-        socket.emit("messageStatus", { messageId: msg.messageId, status: 'Delivered' });
-      });
+        socket.emit('messageStatus', { messageId: msg.messageId, status: 'Delivered' })
+      })
 
-      socket.on("message-status-updated", (data) => {
-        updateMessageStatus(data.messageId, data.status);
-      });
+      socket.on('message-status-updated', (data) => {
+        updateMessageStatus(data.messageId, data.status)
+      })
 
-      socket.on("sent-message-id", (data) => {
-        console.log("Sent message ID:", data.messageId);
-      });
+      socket.on('sent-message-id', (data) => {
+        updateLastSentMessageId(data.messageId)
+      })
 
       let activityTimer
-      socket.on("activity", (userId) => {
+      socket.on('activity', (userId) => {
         document.querySelector('.activity').textContent = `${userId.slice(-4)} is typing...`
 
-          // Clear after 3 seconds 
-          clearTimeout(activityTimer)
-          activityTimer = setTimeout(() => {
-            document.querySelector('.activity').textContent = ""
-          }, 2000)
+        // Clear after 3 seconds
+        clearTimeout(activityTimer)
+        activityTimer = setTimeout(() => {
+          document.querySelector('.activity').textContent = ''
+        }, 2000)
       })
     } else {
-      socket.emit("register", { userId: userIdSelect.value });
+      socket.emit('register', { userId: userIdSelect.value })
     }
-  });
+  })
 
   // Event listener for the send button
-  sendButton.addEventListener("click", function () {
-    sendMessage();
-  });
+  sendButton.addEventListener('click', function () {
+    sendMessage()
+  })
 
   message.addEventListener('keypress', (e) => {
-    if (e.key !== "Enter") {
+    if (e.key !== 'Enter') {
       socket.emit('activity', {
         type: 'typing',
         userId: userIdSelect.value,
-        recipientId: recipientIdSelect.value,
-      });
+        recipientId: recipientIdSelect.value
+      })
     }
   })
 
   // Function to send a message
-  function sendMessage() {
-    var message = messageInput.value;
+  function sendMessage () {
+    const message = messageInput.value
 
     if (message.length > 0) {
-      socket.emit("private_message", {
+      socket.emit('private_message', {
         senderId: userIdSelect.value,
         recipientId: recipientIdSelect.value,
         conversationId: conversationIdInput.value,
-        message: message,
-      });
+        message
+      })
 
       // Remove the status from the last sent message
-      removeLastMessageStatus();
+      removeLastMessageStatus()
 
       // Display the sent message
-      var messageContainer = document.createElement("div");
-      messageContainer.classList.add("sent-container"); // Add class for the message container
+      const messageContainer = document.createElement('div')
+      messageContainer.classList.add('sent-container') // Add class for the message container
 
-      var sentMsgDiv = document.createElement("div");
-      sentMsgDiv.textContent = message;
-      sentMsgDiv.classList.add("sent-message"); // Add class for styling
-      messageContainer.appendChild(sentMsgDiv);
+      const sentMsgDiv = document.createElement('div')
+      sentMsgDiv.textContent = message
+      sentMsgDiv.classList.add('sent-message') // Add class for styling
+      messageContainer.appendChild(sentMsgDiv)
 
       // Create and append status span
-      var statusSpan = document.createElement("span");
-      statusSpan.classList.add("message-status");
-      statusSpan.textContent = "Sent"; // Default status
-      messageContainer.appendChild(statusSpan);
-      messagesDiv.appendChild(messageContainer);
+      const statusSpan = document.createElement('span')
+      statusSpan.classList.add('message-status')
+      statusSpan.textContent = 'Sent' // Default status
+      messageContainer.appendChild(statusSpan)
+      messagesDiv.appendChild(messageContainer)
 
-      scrollToBottom();
-      messageInput.value = ''; // Clear the input field after sending
+      scrollToBottom()
+      messageInput.value = '' // Clear the input field after sending
     }
   }
 
   // Event listener to send message when Enter key is pressed
-  messageInput.addEventListener("keyup", function(event) {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      sendMessage();
+  messageInput.addEventListener('keyup', function (event) {
+    if (event.key === 'Enter') {
+      event.preventDefault()
+      sendMessage()
     }
-  });
+  })
 
-  function removeLastMessageStatus() {
+  function removeLastMessageStatus () {
     // Target the last sent-container
-    var messagesDiv = document.getElementById("messages");
-    var lastSentContainer = messagesDiv.querySelector(".sent-container:last-child");
+    const messagesDiv = document.getElementById('messages')
+    const lastSentContainer = messagesDiv.querySelector('.sent-container:last-child')
     // var lastSentContainer = document.getElementById("messages").querySelector(".sent-container:last-child");
     if (lastSentContainer) {
-      var statusSpan = lastSentContainer.querySelector(".message-status");
+      const statusSpan = lastSentContainer.querySelector('.message-status')
       if (statusSpan) {
-        statusSpan.remove();
+        statusSpan.remove()
       }
     }
   }
 
   function updateMessageStatus (messageId, status) {
-    // Target the last sent-container
-    var messagesDiv = document.getElementById("messages");
-    var lastSentContainer = messagesDiv.querySelector(".sent-container:last-child");
-    // var lastSentContainer = document.getElementById("messages").querySelector(".sent-container");
-    if (lastSentContainer) {
-      var statusSpan = lastSentContainer.querySelector(".message-status");
-      if (statusSpan) {
-        // Fade out the status
-        statusSpan.style.opacity = '0';
+    const messagesDiv = document.getElementById('messages')
+    const lastSentContainer = messagesDiv.querySelector('.sent-container:last-child')
 
-        // After transition duration, change the text and fade it back in
-        setTimeout(() => {
-          statusSpan.textContent = status;
-          statusSpan.style.opacity = '1';
-        }, 200); // This duration should match the CSS transition duration
+    if (lastSentContainer) {
+      const lastSentMsgDiv = lastSentContainer.querySelector('.sent-message')
+
+      // Check if the last message's ID matches the provided messageId
+      if (lastSentMsgDiv && lastSentMsgDiv.getAttribute('data-message-id') === messageId) {
+        const statusSpan = lastSentContainer.querySelector('.message-status')
+
+        // If there is no status span, create it
+        if (!statusSpan) {
+          console.log('Cannot update status. statusSpan not found.')
+        }
+        if (statusSpan) {
+        // Fade out the status
+          statusSpan.style.opacity = '0'
+
+          // After transition duration, change the text and fade it back in
+          setTimeout(() => {
+            statusSpan.textContent = status
+            statusSpan.style.opacity = '1'
+          }, 200) // This duration should match the CSS transition duration
+        }
       }
     }
   }
-});
+
+  function updateLastSentMessageId (messageId) {
+    const lastSentContainer = messagesDiv.querySelector('.sent-container:last-child')
+    if (lastSentContainer) {
+      const lastSentMsgDiv = lastSentContainer.querySelector('.sent-message')
+      if (lastSentMsgDiv && !lastSentMsgDiv.hasAttribute('data-message-id')) {
+        lastSentMsgDiv.setAttribute('data-message-id', messageId)
+      }
+    }
+  }
+
+  function emitReadStatusForVisibleMessages () {
+    document.querySelectorAll('#messages .received-container .received-message').forEach((msgDiv) => {
+      if (isVisible(msgDiv) && !msgDiv.hasAttribute('data-read-emitted')) {
+        const messageId = msgDiv.getAttribute('data-message-id')
+        socket.emit('messageStatus', { messageId, status: 'Read' })
+        msgDiv.setAttribute('data-read-emitted', 'true')
+      }
+    })
+  }
+
+  function isVisible (element) {
+    const rect = element.getBoundingClientRect()
+    return rect.top >= 0 && rect.bottom <= window.innerHeight
+  }
+})
