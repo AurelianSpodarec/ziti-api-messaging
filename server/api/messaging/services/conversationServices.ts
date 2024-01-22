@@ -91,7 +91,6 @@ const getOrCreateConversation = async (
   return conversation
 }
 
-// Function to get unread message count for each conversation for a user
 const getUnread = async (userId: string): Promise<Record<string, number>> => {
   try {
     // Use optional chaining to avoid null checks

@@ -32,7 +32,7 @@ export async function conversations (req: AuthenticatedRequest, res: Response): 
 }
 
 export async function conversation (req: Request, res: Response): Promise<void> {
-  const conversationId = req.query.c as string
+  const conversationId = req.params.conversationId
   const page = parseQueryParam(req.query.page as string, 1)
   const limit = parseQueryParam(req.query.limit as string, 20)
 

@@ -6,7 +6,7 @@ import path from 'path'
 
 const router = express.Router()
 
-router.use('/conversation', conversationsRoutes)
+router.use('/conversations', conversationsRoutes)
 
 // Static files route for '/public'
 router.use('/public', express.static(path.join(__dirname, 'public')))
