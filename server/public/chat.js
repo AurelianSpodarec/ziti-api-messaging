@@ -76,20 +76,31 @@ document.addEventListener('DOMContentLoaded', () => {
       threshold: 1.0 // Require 100% of the target to be visible
     }
 
-    // Observer checks each entry to see if it's intersecting (visible)
     const observer = new IntersectionObserver((entries, observer) => {
       entries.forEach((entry) => {
-        // Check if the message is visible and the window is focused
         if (entry.isIntersecting && document.hasFocus()) {
-          // Emit messageStatus event for the visible message
-          const messageId = entry.target.getAttribute('data-message-id')
-          socket.emit('messageStatus', { messageId, status: 'Read' })
-          observer.unobserve(entry.target) // Stop observing the target
+          // Ensure the target is a received message and not yet marked as read
+          if (isReceivedMessage(entry.target) && !isReadEmitted(entry.target)) {
+            const messageId = entry.target.getAttribute('data-message-id')
+            socket.emit('messageStatus', { messageId, status: 'Read' })
+            entry.target.setAttribute('data-read-emitted', 'true')
+            observer.unobserve(entry.target) // Stop observing the target
+          }
         }
       })
     }, options)
 
     return observer
+  }
+
+  function isReceivedMessage (element) {
+    // Check if the element is a child of 'received-container' class
+    return element.classList.contains('received-message')
+  }
+
+  function isReadEmitted (element) {
+    // Check if 'data-read-emitted' attribute is present and true
+    return element.getAttribute('data-read-emitted') === 'true'
   }
 
   // Initialize the read receipt observer
@@ -98,12 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Event listener to handle message reads when window gains focus
   window.addEventListener('focus', () => {
     document.querySelectorAll('#messages .received-container .received-message').forEach((msgDiv) => {
-      if (
-        msgDiv.getAttribute('data-message-id') &&
-        msgDiv.getBoundingClientRect().top >= 0 &&
-        msgDiv.getBoundingClientRect().bottom <= window.innerHeight &&
-        !msgDiv.hasAttribute('data-read-emitted')
-      ) {
+      if (isVisible(msgDiv) && !msgDiv.hasAttribute('data-read-emitted')) {
         // Emit messageStatus for visible messages when window gains focus
         const messageId = msgDiv.getAttribute('data-message-id')
         socket.emit('messageStatus', { messageId, status: 'Read' })
@@ -111,6 +117,11 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     })
   })
+
+  function isVisible (element) {
+    const rect = element.getBoundingClientRect()
+    return rect.top >= 0 && rect.bottom <= window.innerHeight
+  }
 
   // Event listener to handle user selection changes
   userIdSelect.addEventListener('change', function () {
