@@ -35,18 +35,19 @@ const getConversation = async (
   }
 }
 
-const getConversations = async (userId: string): Promise<Conversation | null> => {
+const getConversations = async (userId: string): Promise<Conversation[]> => {
   try {
-    const conversations = await Conversation.findOne({
-      where: {
-        user: userId
-      }
+    const user = await User.findOne({
+      where: { id: userId },
+      include: [Conversation]
     })
+
+    const conversations = user?.dataValues.Conversations ?? []
 
     return conversations
   } catch (error) {
     console.error('Error finding conversations:', error)
-    return null
+    return []
   }
 }
 
@@ -94,23 +95,17 @@ const getOrCreateConversation = async (
 const getUnread = async (userId: string): Promise<Record<string, number>> => {
   try {
     // Use optional chaining to avoid null checks
-    const userConversations = await User.findOne({
-      where: { id: userId },
-      include: [Conversation]
-    })
-
-    // console.log('User conversations: ', userConversations)
+    const userConversations = await getConversations(userId)
 
     // Return early if no conversations found
-    if (userConversations?.dataValues.Conversations === undefined) {
+    if (userConversations === undefined) {
       return {}
     }
 
     const unreadCounts: Record<string, number> = {}
 
-    for (const conversation of userConversations.dataValues.Conversations) {
+    for (const conversation of userConversations) {
       try {
-        console.log('Conversation: ', conversation.id)
         // Use optional chaining for conversation and id access
         const conversationId = conversation?.id
 
@@ -123,8 +118,6 @@ const getUnread = async (userId: string): Promise<Record<string, number>> => {
           status: { $ne: 'Read' },
           senderId: { $ne: userId }
         }).exec()
-
-        console.log('Unread count: ', unreadCount)
 
         unreadCounts[conversationId] = unreadCount
       } catch (error) {
