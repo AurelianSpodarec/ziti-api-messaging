@@ -20,7 +20,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!userIdSelect.value) return // Exit if no user is selected
 
     try {
-      const response = await fetch(`http://localhost:3002/conversation?c=${conversationId}&page=1&limit=20`)
+      const token = authTokenInput.value
+      const response = await fetch(`http://localhost:3002/conversations/${conversationId}?page=1&limit=20`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
       if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`)
       const data = await response.json()
       displayMessages(data.messages)
@@ -127,12 +132,18 @@ document.addEventListener('DOMContentLoaded', () => {
     return rect.top >= 0 && rect.bottom <= window.innerHeight
   }
 
+  const authTokenInput = document.getElementById('authToken')
+
   // Event listener to handle user selection changes
   userIdSelect.addEventListener('change', function () {
     // Create or update socket connection when a user is selected
     if (socket === null) {
-      // socket = io("http://localhost:3002");
-      socket = io('ws://localhost:3002')
+      const token = authTokenInput.value
+      socket = io('ws://localhost:3002', {
+        auth: {
+          token: `Bearer ${token}`
+        }
+      })
 
       // Handle socket connection events
       socket.on('connect', () => {

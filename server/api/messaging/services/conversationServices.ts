@@ -5,6 +5,7 @@ import User from 'server/api/messaging/models/userModel'
 import { Message, type IMessage } from '../models/messageModel'
 
 const getConversation = async (
+  userId: string,
   conversationId: string,
   page: number = 1,
   limit: number = 20
@@ -14,17 +15,30 @@ const getConversation = async (
   totalPages: number
   totalMessages: number
 }> => {
+  console.log('getConversation')
   try {
-    const conversation = await Conversation.findOne({
-      where: { id: conversationId }
+    const userWithConversation = await User.findOne({
+      where: { id: userId },
+      include: [{
+        model: Conversation,
+        where: { id: conversationId }
+      }]
     })
-    if (conversation === null) return { conversation: null, messages: null, totalPages: 0, totalMessages: 0 }
+
+    // console.log('userWithConversation.dataValues.Conversations[0]: ', userWithConversation?.dataValues.Conversations[0])
+
+    if (userWithConversation?.dataValues.Conversations === undefined || userWithConversation?.dataValues.Conversations?.length === 0) {
+      console.log('No conversations found')
+      return { conversation: null, messages: null, totalPages: 0, totalMessages: 0 }
+    }
+
+    const conversation = userWithConversation.dataValues.Conversations[0]
 
     const totalMessages = await Message.countDocuments({ conversationId })
     const totalPages = Math.ceil(totalMessages / limit)
 
     const messages = await Message.find({ conversationId })
-      .sort({ createdAt: -1 }) // For ascending order (oldest first), use { createdAt: 1 }. For descending order (newest first), use { createdAt: -1 }.
+      .sort({ createdAt: -1 })
       .skip((page - 1) * limit)
       .limit(limit)
 
@@ -36,6 +50,7 @@ const getConversation = async (
 }
 
 const getConversations = async (userId: string): Promise<Conversation[]> => {
+  console.log('getConversations')
   try {
     const user = await User.findOne({
       where: { id: userId },
@@ -52,6 +67,7 @@ const getConversations = async (userId: string): Promise<Conversation[]> => {
 }
 
 const createConversation = async (users: string[]): Promise<{ conversation: Conversation | null, messages: IMessage[] | null }> => {
+  console.log('createConversation')
   try {
     const conversation = await Conversation.create(
       {
@@ -75,23 +91,26 @@ const createConversation = async (users: string[]): Promise<{ conversation: Conv
 }
 
 const getOrCreateConversation = async (
+  userId: string,
   conversationId: string,
   users: string[]
 ): Promise<{
   conversation: Conversation | null
   messages: IMessage[] | null
 }> => {
+  console.log('getOrCreateConversation')
   let conversation: { conversation: Conversation | null, messages: IMessage[] | null }
   if (conversationId === null || conversationId === undefined || conversationId === '') {
     conversation = await createConversation(users)
   } else {
-    conversation = await getConversation(conversationId)
+    conversation = await getConversation(userId, conversationId)
   }
 
   return conversation
 }
 
 const getUnread = async (userId: string): Promise<Record<string, number>> => {
+  console.log('getUnread')
   try {
     // Use optional chaining to avoid null checks
     const userConversations = await getConversations(userId)

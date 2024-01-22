@@ -5,13 +5,13 @@ import { type MessageData } from 'server/types/messageData'
 import { Message } from '../models/messageModel'
 import { getOrCreateConversation } from './conversationServices'
 
-export const sendDirectMessage = async (data: MessageData, socket: Socket, onlineUsers: Map<string, string>): Promise<void> => {
+export const sendDirectMessage = async (userId: string, data: MessageData, socket: Socket, onlineUsers: Map<string, string>): Promise<void> => {
   console.log('\x1b[34m%s\x1b[0m', 'Message received')
 
   const { senderId, recipientId, conversationId, message } = data
 
   try {
-    const conversation = await getOrCreateConversation(conversationId, [senderId, recipientId])
+    const conversation = await getOrCreateConversation(userId, conversationId, [senderId, recipientId])
     if (conversation?.conversation === null) {
       throw new Error('Conversation not found or could not be created.')
     }
