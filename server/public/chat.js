@@ -45,9 +45,9 @@ document.addEventListener('DOMContentLoaded', () => {
       messageContainer.classList.add(msg.senderId === userIdSelect.value ? 'sent-container' : 'received-container')
 
       const msgDiv = document.createElement('div')
+      msgDiv.classList.add(msg.senderId === userIdSelect.value ? 'sent-message' : 'received-message')
       msgDiv.setAttribute('message-id', msg._id)
       msgDiv.textContent = msg.textContent
-      msgDiv.classList.add(msg.senderId === userIdSelect.value ? 'sent-message' : 'received-message')
 
       if (msg.status === 'Read') {
         msgDiv.setAttribute('read-emitted', 'true')
