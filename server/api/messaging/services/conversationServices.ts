@@ -24,7 +24,7 @@ const getConversation = async (
     const totalPages = Math.ceil(totalMessages / limit)
 
     const messages = await Message.find({ conversationId })
-      .sort({ createdAt: -1 })
+      .sort({ createdAt: -1 }) // For ascending order (oldest first), use { createdAt: 1 }. For descending order (newest first), use { createdAt: -1 }.
       .skip((page - 1) * limit)
       .limit(limit)
 
