@@ -44,7 +44,6 @@ export const sendDirectMessage = async (data: MessageData, socket: Socket, onlin
       console.log('\x1b[34m%s\x1b[0m', 'message sent:', message)
     } else {
       console.log('\x1b[34m%s\x1b[0m', 'recipient is offline')
-      // store in unreadMessages table
     }
   } catch (error) {
     // Error handling
