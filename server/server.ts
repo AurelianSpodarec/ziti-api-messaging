@@ -11,6 +11,7 @@ import customPoweredBy from './middleware/customPoweredBy'
 import initPostgres from './messagesPostgres'
 import initMongo from './messagesMongo'
 import routes from './routes'
+import { errorHandler } from './middleware/errorHandler'
 import { handle404 } from './middleware/handle404'
 
 // CORS options configuration
@@ -80,6 +81,9 @@ initMongo()
 
 // Routes
 app.use(routes)
+
+// Error handler
+app.use(errorHandler)
 
 // 404 logging
 app.use(handle404)
