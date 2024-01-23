@@ -1,12 +1,11 @@
 // server/api/blog/controllers/conversationsController.ts
 
-import { type Response } from 'express'
+import { type Response, type NextFunction } from 'express'
 import { getConversations, getConversation, createConversation, getUnread } from '../services/conversationServices'
 import { type AuthenticatedRequest } from 'server/types/authenticatedRequest'
 import { parseQueryParam } from 'server/utils/parseQueryParam'
-import { handleError } from 'server/utils/errorHandler'
 
-export async function conversations (req: AuthenticatedRequest, res: Response): Promise<void> {
+export async function conversations (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
   try {
     const userId = req.decodedToken.id
     const conversations = await getConversations(userId)
@@ -16,19 +15,13 @@ export async function conversations (req: AuthenticatedRequest, res: Response): 
       return
     }
     console.log('\x1b[32m200 OK. Sending conversations data.\x1b[0m')
-    res.json(conversations)
-  } catch (e) {
-    if (e instanceof Error) {
-      handleError(res, e, 'Problem fetching conversations.')
-    } else {
-      // If it's not an Error, you might want to handle it differently
-      console.error('Unexpected error:', e)
-      res.status(500).json({ error: 'Unexpected error occurred.' })
-    }
+    res.status(200).json(conversations)
+  } catch (error) {
+    next(error)
   }
 }
 
-export async function conversation (req: AuthenticatedRequest, res: Response): Promise<void> {
+export async function conversation (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
   try {
     const userId = req.decodedToken.id
     const conversationId = req.params.conversationId
@@ -46,36 +39,24 @@ export async function conversation (req: AuthenticatedRequest, res: Response): P
       return
     }
     console.log('\x1b[32m200 OK. Sending conversation data.\x1b[0m')
-    res.json(conversation)
-  } catch (e) {
-    if (e instanceof Error) {
-      handleError(res, e, 'Problem fetching conversation.')
-    } else {
-      // If it's not an Error, you might want to handle it differently
-      console.error('Unexpected error:', e)
-      res.status(500).json({ error: 'Unexpected error occurred.' })
-    }
+    res.status(200).json(conversation)
+  } catch (error) {
+    next(error)
   }
 }
 
-export async function createConversations (req: AuthenticatedRequest, res: Response): Promise<void> {
+export async function createConversations (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
   try {
     const userId = req.decodedToken.id
     const recipientId = req.body
     const newConversation = await createConversation([userId, recipientId] as string[])
     res.status(201).json(newConversation)
-  } catch (e) {
-    if (e instanceof Error) {
-      handleError(res, e, 'Problem creating conversations.')
-    } else {
-      // If it's not an Error, you might want to handle it differently
-      console.error('Unexpected error:', e)
-      res.status(500).json({ error: 'Unexpected error occurred.' })
-    }
+  } catch (error) {
+    next(error)
   }
 }
 
-export async function unread (req: AuthenticatedRequest, res: Response): Promise<void> {
+export async function unread (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
   try {
     const userId = req.decodedToken.id
     const unread = await getUnread(userId)
@@ -85,14 +66,8 @@ export async function unread (req: AuthenticatedRequest, res: Response): Promise
       return
     }
     console.log('\x1b[32m200 OK. Sending unread data.\x1b[0m')
-    res.json(unread)
-  } catch (e) {
-    if (e instanceof Error) {
-      handleError(res, e, 'Problem fetching unread.')
-    } else {
-      // If it's not an Error, you might want to handle it differently
-      console.error('Unexpected error:', e)
-      res.status(500).json({ error: 'Unexpected error occurred.' })
-    }
+    res.status(200).json(unread)
+  } catch (error) {
+    next(error)
   }
 }
