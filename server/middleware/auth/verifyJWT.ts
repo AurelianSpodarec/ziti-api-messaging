@@ -1,6 +1,6 @@
 // server/middleware/auth/verifyJWT.ts
 
-import { type Response, type NextFunction } from 'express'
+import { type Request, type Response, type NextFunction } from 'express'
 import jwt from 'jsonwebtoken'
 import { getRequiredEnvVariable } from '../../utils/getRequiredEnvVariable'
 import { type AuthenticatedRequest } from '../../types/authenticatedRequest'
@@ -8,7 +8,7 @@ import { type DecodedJWTPayload } from '../../types/decodedJWTPayload'
 
 // The `verifyJWT` function serves as a middleware for Express.js to verify incoming JWT tokens
 const verifyJWT = (
-  req: AuthenticatedRequest,
+  req: Request,
   res: Response,
   next: NextFunction
 ): void => {
@@ -69,7 +69,8 @@ const verifyJWT = (
         return res.sendStatus(403)
       }
       if (decoded !== undefined && typeof decoded !== 'string') {
-        req.decodedToken = decoded as DecodedJWTPayload
+        const authenticatedRequest = req as AuthenticatedRequest
+        authenticatedRequest.decodedToken = decoded as DecodedJWTPayload
       }
       next()
     }
