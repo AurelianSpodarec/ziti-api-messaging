@@ -100,7 +100,7 @@ const getOrCreateConversation = async (
   if (conversationId === null || conversationId === undefined || conversationId === '') {
     conversation = await createConversation(users)
   } else {
-    conversation = await getConversation(userId, conversationId)
+    conversation = await getConversation(userId, conversationId, 1, 20)
   }
 
   return conversation
