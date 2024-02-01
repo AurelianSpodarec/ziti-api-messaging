@@ -1,16 +1,16 @@
 // server/server.ts
 
-import express from 'express'
-import { getRequiredEnvVariable } from './utils/getRequiredEnvVariable'
-import cors from 'cors'
 import { createServer } from 'http'
+import cors from 'cors'
+import express from 'express'
 import { Server as SocketIOServer } from 'socket.io'
-import { socketHandlers } from './utils/socketHandlers'
-import { consoleLogging } from './middleware/consoleLogging'
-import customPoweredBy from './middleware/customPoweredBy'
-import initPostgres from './messagesPostgres'
 import initMongo from './messagesMongo'
+import initPostgres from './messagesPostgres'
+import { getRequiredEnvVariable } from './utils/getRequiredEnvVariable'
+import { socketHandlers } from './utils/socketHandlers'
 import routes from './routes'
+import customPoweredBy from './middleware/customPoweredBy'
+import { consoleLogging } from './middleware/consoleLogging'
 import { errorHandler } from './middleware/errorHandler'
 import { handle404 } from './middleware/handle404'
 
