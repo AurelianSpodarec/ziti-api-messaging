@@ -1,5 +1,8 @@
 // server/server.ts
 
+// Ensure environment is configured before importing any other modules
+import './utils/configureEnvironment'
+
 import { createServer } from 'http'
 import cors from 'cors'
 import express from 'express'
