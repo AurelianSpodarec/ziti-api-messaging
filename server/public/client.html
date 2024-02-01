@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Socket.IO test</title>
+    <link rel="stylesheet" href="chat.css" />
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <script src="chat.js" defer></script>
+  </head>
+  <body>
+    <h1>Socket.IO Chat</h1>
+    <input
+      class="input-field"
+      type="text"
+      id="authToken"
+      placeholder="Enter Bearer Token"
+    />
+    <input
+      class="input-field"
+      type="text"
+      id="conversationId"
+      value="b619308f-e44f-43c6-881d-2b75f8871f48"
+    />
+    <select class="input-field" id="userId">
+      <option value="">Select User</option>
+      <option value="ae2c49d2-64b9-4d4f-ad22-7694f195605f">User 1</option>
+      <option value="be5c487c-2ca3-4d41-be3b-bc2268836066">User 2</option>
+    </select>
+    <select class="input-field" id="recipientId">
+      <option value="ae2c49d2-64b9-4d4f-ad22-7694f195605f">User 1</option>
+      <option value="be5c487c-2ca3-4d41-be3b-bc2268836066">User 2</option>
+    </select>
+    <input
+      class="input-field"
+      type="text"
+      id="message"
+      placeholder="Type a message"
+    />
+    <button id="sendButton">Send</button>
+    <div id="messages"></div>
+    <p class="activity"></p>
+  </body>
+</html>

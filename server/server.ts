@@ -1,20 +1,18 @@
-import fs from 'fs'
-import dotenv from 'dotenv'
-import express, { type Request, type Response } from 'express'
+// server/server.ts
+
+import express from 'express'
 import { getRequiredEnvVariable } from './utils/getRequiredEnvVariable'
 import cors from 'cors'
 import { createServer } from 'http'
 import { Server as SocketIOServer } from 'socket.io'
+import { socketHandlers } from './utils/socketHandlers'
 import { consoleLogging } from './middleware/consoleLogging'
 import customPoweredBy from './middleware/customPoweredBy'
-
-if (process.env.NODE_ENV === 'development') {
-  if (fs.existsSync('.env')) {
-    dotenv.config()
-  } else {
-    throw new Error('.env file not found')
-  }
-}
+import initPostgres from './messagesPostgres'
+import initMongo from './messagesMongo'
+import routes from './routes'
+import { errorHandler } from './middleware/errorHandler'
+import { handle404 } from './middleware/handle404'
 
 // CORS options configuration
 const corsOptions = {
@@ -59,9 +57,36 @@ app.use(cors(corsOptions))
 // Handle preflight requests (OPTIONS)
 app.options('*', cors(corsOptions))
 
-app.get('/', (req: Request, res: Response) => {
-  res.status(204).end()
-})
+// Standard DB Processing
+initPostgres.sequelizeMsg
+  .sync({ force: false })
+  .then(() => {
+    console.log('\x1b[32mSynced db.\x1b[0m')
+  })
+  .catch((err: Error) => {
+    console.log('\x1b[31mFailed to sync db: ' + err.message + '\x1b[0m')
+  })
+
+// Connect to MongoDB at the start of your application
+initMongo()
+  .then(() => {
+    // MongoDB is connected. Start Express server or other operations here.
+  })
+  .catch((error) => {
+    // Handle MongoDB connection error
+    console.error('MongoDB connection failed:', error)
+    // Depending on your application's needs, you might want to exit if the database connection is essential
+    process.exit(1)
+  })
+
+// Routes
+app.use(routes)
+
+// Error handler
+app.use(errorHandler)
+
+// 404 logging
+app.use(handle404)
 
 const host = getRequiredEnvVariable('HOST')
 const port = getRequiredEnvVariable('PORT')
@@ -79,17 +104,5 @@ const io = new SocketIOServer(httpServer, {
   cors: corsOptions
 })
 
-io.on('connection', (socket) => {
-  console.log('A user connected')
-
-  socket.on('disconnect', () => {
-    console.log('User disconnected')
-  })
-
-  // Example of handling a custom event
-  socket.on('chat message', (msg) => {
-    console.log('Message received: ' + msg)
-    // Echo back the message to the same client
-    socket.emit('chat message', `Echo: ${msg}`)
-  })
-})
+// Setup Socket.IO event handlers
+socketHandlers(io)
