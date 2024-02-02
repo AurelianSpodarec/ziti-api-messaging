@@ -1,6 +1,6 @@
 // server/config/mongo.ts
 
-import { getRequiredEnvVariable } from 'server/utils/getRequiredEnvVariable'
+import { getRequiredEnvVariable } from '@utils/getRequiredEnvVariable'
 
 const mongoDbUser = getRequiredEnvVariable('MSGMONGODB_MESSAGES_USERNAME')
 const mongoDbPassword = getRequiredEnvVariable('MSGMONGODB_MESSAGES_PASSWORD')

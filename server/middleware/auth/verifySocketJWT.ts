@@ -3,7 +3,7 @@
 import jwt from 'jsonwebtoken'
 import { getRequiredEnvVariable } from '../../utils/getRequiredEnvVariable'
 import { type DecodedJWTPayload } from '../../types/decodedJWTPayload'
-import { type AuthenticatedSocket } from 'server/types/authenticatedSocket'
+import { type AuthenticatedSocket } from '../../types/authenticatedSocket'
 
 // const verifySocketJWT = (socket: AuthenticatedSocket, next: next): void => {
 const verifySocketJWT = (socket: AuthenticatedSocket, next: (err?: Error | undefined) => void): void => {

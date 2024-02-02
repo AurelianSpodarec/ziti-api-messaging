@@ -1,7 +1,7 @@
 // server/api/messaging/services/socketSendDirectMessage.ts
 
 import { type Socket } from 'socket.io'
-import { type MessageData } from 'server/types/messageData'
+import { type MessageData } from '../../../types/messageData'
 import { Message } from '../models/messageModel'
 import { getOrCreateConversation } from './conversationServices'
 

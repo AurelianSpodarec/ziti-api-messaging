@@ -1,7 +1,7 @@
 // server/api/messaging/services/conversationServices.ts
 
 import Conversation from '../models/conversationModel'
-import User from 'server/api/messaging/models/userModel'
+import User from '@api/messaging/models/userModel'
 import { Message, type IMessage } from '../models/messageModel'
 
 const getConversation = async (

@@ -1,8 +1,8 @@
 // server/api/blog/controllers/conversationsController.ts
 
 import { type Response, type NextFunction } from 'express'
-import { type AuthenticatedRequest } from 'server/types/authenticatedRequest'
-import { parseQueryParam } from 'server/utils/parseQueryParam'
+import { type AuthenticatedRequest } from '../../../types/authenticatedRequest'
+import { parseQueryParam } from '@utils/parseQueryParam'
 import { getConversations, getConversation, createConversation, getUnread } from '../services/conversationServices'
 
 export async function conversations (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {

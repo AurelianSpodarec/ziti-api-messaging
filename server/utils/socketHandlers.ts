@@ -1,16 +1,16 @@
 // server/utils/socketHandlers.ts
 
 import { type Server as SocketIOServer } from 'socket.io'
-import { type MessageData } from 'server/types/messageData'
-import { type RegisterData } from 'server/types/registerData'
-import { type MessageStatusData } from 'server/types/messageStatusData'
-import { registerUser } from 'server/api/messaging/services/socketRegisterUser'
-import { sendDirectMessage } from 'server/api/messaging/services/socketSendDirectMessage'
-import { socketDisconnect } from 'server/api/messaging/services/socketDisconnect'
-import { setMessageStatus } from 'server/api/messaging/services/socketSetMessageStatus'
-import { handleActivity } from 'server/api/messaging/services/socketHandleActivity'
-import verifySocketJWT from 'server/middleware/auth/verifySocketJWT'
-import { type AuthenticatedSocket } from 'server/types/authenticatedSocket'
+import { type MessageData } from '../types/messageData'
+import { type RegisterData } from '../types/registerData'
+import { type MessageStatusData } from '../types/messageStatusData'
+import { registerUser } from '@api/messaging/services/socketRegisterUser'
+import { sendDirectMessage } from '@api/messaging/services/socketSendDirectMessage'
+import { socketDisconnect } from '@api/messaging/services/socketDisconnect'
+import { setMessageStatus } from '@api/messaging/services/socketSetMessageStatus'
+import { handleActivity } from '@api/messaging/services/socketHandleActivity'
+import verifySocketJWT from '@middleware/auth/verifySocketJWT'
+import { type AuthenticatedSocket } from '../types/authenticatedSocket'
 
 const onlineUsers = new Map<string, string>() // Maps userId to socketId
 const userSockets = new Map<string, string>() // Maps socketId to userId

@@ -1,7 +1,7 @@
 // server/api/messaging/routes/conversationRoutes.ts
 
 import { Router, type Request, type RequestHandler, type Response, type NextFunction } from 'express'
-import { type AuthenticatedRequest } from 'server/types/authenticatedRequest'
+import { type AuthenticatedRequest } from '../../../types/authenticatedRequest'
 import { conversation, conversations, unread } from '../controllers/ConversationsController'
 import verifyJWT from '../../../middleware/auth/verifyJWT'
 import { errorHandler } from '../../../middleware/errorHandler'

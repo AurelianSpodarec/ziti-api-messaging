@@ -1,7 +1,7 @@
 // server/api/messaging/services/socketSetMessageStatus.ts
 
 import { type Server as SocketIOServer, type Socket } from 'socket.io'
-import { type MessageStatusData } from 'server/types/messageStatusData'
+import { type MessageStatusData } from '../../../types/messageStatusData'
 import { Message } from '../models/messageModel' // Ensure this path is correct
 
 export const setMessageStatus = async (

@@ -1,7 +1,7 @@
 // server/api/messaging/services/socketRegister.ts
 
 import { type Socket } from 'socket.io'
-import { type RegisterData } from 'server/types/registerData'
+import { type RegisterData } from '../../../types/registerData'
 
 export const registerUser = async (data: RegisterData, socket: Socket, onlineUsers: Map<string, string>, userSockets: Map<string, string>): Promise<void> => {
   const userId = data.userId
