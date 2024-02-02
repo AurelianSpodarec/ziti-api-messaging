@@ -64,10 +64,10 @@ app.options('*', cors(corsOptions))
 initPostgres.sequelizeMsg
   .sync({ force: false })
   .then(() => {
-    console.log('\x1b[32mSynced db.\x1b[0m')
+    console.log('\x1b[32mSynced messagingDB.\x1b[0m')
   })
   .catch((err: Error) => {
-    console.log('\x1b[31mFailed to sync db: ' + err.message + '\x1b[0m')
+    console.log('\x1b[31mFailed to sync messagingDB: ' + err.message + '\x1b[0m')
   })
 
 // Connect to MongoDB at the start of your application
