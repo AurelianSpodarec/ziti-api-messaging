@@ -13,8 +13,8 @@ WORKDIR /app
 COPY --from=build /app ./
 ENV NEXT_TELEMETRY_DISABLED 1
 ENV NODE_ENV=production
-ENV PORT=3002
-EXPOSE 3002
+ENV PORT=3004
+EXPOSE 3004
 
 # Create a non-root user for running the application
 RUN addgroup --system --gid 1001 nodejs
