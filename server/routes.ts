@@ -17,4 +17,10 @@ router.get('/', (req, res) => {
   res.status(204).end()
 })
 
+// Health check endpoint
+router.get('/health', (req, res) => {
+  // Here you can add checks for your app's health (e.g., database connection)
+  res.status(200).send('OK')
+})
+
 export default router
