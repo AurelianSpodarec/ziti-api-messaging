@@ -42,7 +42,7 @@ services:
       MSGMONGODB_MESSAGES_USERNAME=: ${MSGMONGODB_MESSAGES_USERNAME}
       MSGMONGODB_MESSAGES_PASSWORD=: ${MSGMONGODB_MESSAGES_PASSWORD}
     volumes:
-      - MSGMONGODB_data:/data/db
+      - mongodb_data:/data/db
       - ./scripts/docker_volume/mongo:/docker-entrypoint-initdb.d:ro
     env_file:
       - ./.env
@@ -50,7 +50,7 @@ services:
 volumes:
   redis_data:
   postgres_data:
-  MSGMONGODB_data:
+  mongodb_data:
 
 networks:
   prod-mynetwork:
