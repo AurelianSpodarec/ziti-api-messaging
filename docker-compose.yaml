@@ -34,15 +34,15 @@ services:
     networks:
       - prod-mynetwork
     ports:
-      - "${MONGODB_PORT}:${MONGODB_PORT}"
+      - "${MSGMONGODB_PORT}:${MSGMONGODB_PORT}"
     environment:
-      MONGO_INITDB_DATABASE: ${MONGODB_DATABASE}
-      MONGO_INITDB_ROOT_USERNAME: ${MONGODB_ROOT_USERNAME}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_ROOT_PASSWORD}
-      MONGODB_MESSAGES_USERNAME=: ${MONGODB_MESSAGES_USERNAME}
-      MONGODB_MESSAGES_PASSWORD=: ${MONGODB_MESSAGES_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MSGMONGODB_DATABASE}
+      MONGO_INITDB_ROOT_USERNAME: ${MSGMONGODB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MSGMONGODB_ROOT_PASSWORD}
+      MSGMONGODB_MESSAGES_USERNAME=: ${MSGMONGODB_MESSAGES_USERNAME}
+      MSGMONGODB_MESSAGES_PASSWORD=: ${MSGMONGODB_MESSAGES_PASSWORD}
     volumes:
-      - mongodb_data:/data/db
+      - MSGMONGODB_data:/data/db
       - ./scripts/docker_volume/mongo:/docker-entrypoint-initdb.d:ro
     env_file:
       - ./.env
@@ -50,7 +50,7 @@ services:
 volumes:
   redis_data:
   postgres_data:
-  mongodb_data:
+  MSGMONGODB_data:
 
 networks:
   prod-mynetwork:
