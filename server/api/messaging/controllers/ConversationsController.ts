@@ -33,7 +33,7 @@ export async function conversation (req: AuthenticatedRequest, res: Response, ne
     limit = Math.min(Math.max(limit, 1), 20) // Ensure limit is between 1 and 20
 
     const conversation = await getConversation(userId, conversationId, page, limit)
-    if (conversation === null) {
+    if (conversation.conversation === null) {
       console.log('\x1b[31m404 Not Found. Conversation not found.\x1b[0m')
       res.sendStatus(404)
       return
