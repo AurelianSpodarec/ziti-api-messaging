@@ -83,7 +83,7 @@ initMongo()
   })
 
 // Routes
-app.use(routes)
+app.use('/api/v1', routes)
 
 // Error handler
 app.use(errorHandler)
