@@ -4,7 +4,6 @@
 import './utils/configureEnvironment'
 
 import { createServer } from 'http'
-import cors from 'cors'
 import express from 'express'
 import { Server as SocketIOServer } from 'socket.io'
 import initMongo from './messagesMongo'
@@ -16,37 +15,14 @@ import customPoweredBy from './middleware/customPoweredBy'
 import { consoleLogging } from './middleware/consoleLogging'
 import { errorHandler } from './middleware/errorHandler'
 import { handle404 } from './middleware/handle404'
-
-// CORS options configuration
-const corsOptions = {
-  // Function to dynamically set allowed origins based on incoming request
-  origin: (
-    origin: string | undefined,
-    callback: (error: Error | null, allow?: boolean) => void
-  ) => {
-    // Retrieve list of allowed domains from an environment variable
-    const allowedDomains = getRequiredEnvVariable('ALLOWED_ORIGINS').split(',')
-
-    if (process.env.NODE_ENV !== 'production') {
-      // Allow all origins in non-production environments
-      console.log(`\x1b[32mAllowed origin (non-production): ${origin}\x1b[0m`)
-      callback(null, true)
-    } else if (origin !== undefined && allowedDomains.includes(origin)) {
-      // In production, check against the list of allowed origins
-      console.log(`\x1b[32mAllowed origin: ${origin}\x1b[0m`)
-      callback(null, true)
-    } else {
-      // Block origins not in the allowed list
-      console.log(`\x1b[31mBlocked origin: ${origin}\x1b[0m`)
-      callback(new Error('403: Origin not permitted by CORS policy'), false)
-    }
-  },
-  // Enable credentials (cookies) for CORS requests
-  credentials: true
-}
+import { initSentry, sentryErrorHandler } from '@utils/sentry'
+import { corsMiddleware } from './middleware/corsMiddleware'
 
 const app = express()
 const httpServer = createServer(app)
+
+// Initialize Sentry
+initSentry(app)
 
 // Console logging middleware
 app.use(consoleLogging)
@@ -54,11 +30,8 @@ app.use(consoleLogging)
 // server.disable('x-powered-by');
 app.use(customPoweredBy(getRequiredEnvVariable('POWERED_BY')))
 
-// Apply CORS middleware with custom options
-app.use(cors(corsOptions))
-
-// Handle preflight requests (OPTIONS)
-app.options('*', cors(corsOptions))
+// Apply custom CORS middleware
+app.use(corsMiddleware)
 
 // Standard DB Processing
 initPostgres.sequelizeMsg
@@ -85,9 +58,6 @@ initMongo()
 // Routes
 app.use('/api/v1', routes)
 
-// Error handler
-app.use(errorHandler)
-
 // 404 logging
 app.use(handle404)
 
@@ -102,6 +72,31 @@ httpServer.listen(port, () => {
   console.error('Failed to start server:', err)
 })
 
+// CORS options for Socket.IO
+const allowedDomains = getRequiredEnvVariable('ALLOWED_ORIGINS').split(',');
+const corsOptions = {
+  origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+    if (process.env.NODE_ENV !== 'production') {
+      // Allow any origin in non-production environments, including no origin
+      console.log(`\x1b[32mAllowed origin (non-production): ${origin || 'No Origin'}\x1b[0m`);
+      callback(null, true);
+    } else {
+      // In production, check if the origin is in the allowed list
+      if (origin && allowedDomains.includes(origin)) {
+        console.log(`\x1b[32mAllowed origin: ${origin}\x1b[0m`);
+        callback(null, true);
+      } else {
+        // Block origins not in the allowed list, including no origin
+        console.log(`\x1b[31mBlocked origin: ${origin || 'No Origin'}\x1b[0m`);
+        callback(new Error('403: Origin not permitted by CORS policy'), false);
+      }
+    }
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "OPTIONS"],
+  allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept", "Authorization"]
+};
+
 // Create a Socket.IO server
 const io = new SocketIOServer(httpServer, {
   cors: corsOptions
@@ -109,3 +104,9 @@ const io = new SocketIOServer(httpServer, {
 
 // Setup Socket.IO event handlers
 socketHandlers(io)
+
+// Use Sentry's error handler
+app.use(sentryErrorHandler())
+
+// Error handler
+app.use(errorHandler)
