@@ -26,6 +26,9 @@ node_modules
 # Hidden files
 .*
 
+# Allow .sentryclirc
+!.sentryclirc
+
 # Ignore IDE/Editor folders
 .idea/
 .vscode/
