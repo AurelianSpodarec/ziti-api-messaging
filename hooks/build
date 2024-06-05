@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# Pass the environment variable from Docker Hub UI to the Docker build process
+docker build -t $IMAGE_NAME --build-arg SENTRY_AUTH_TOKEN=$SENTRY_AUTH_TOKEN .
