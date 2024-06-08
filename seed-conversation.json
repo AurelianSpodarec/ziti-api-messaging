@@ -1,0 +1,462 @@
+[
+  {
+    "conversationId": "9a0c2e68-4b3d-4976-9a3b-63c0f9e8b8d2",
+    "senderId": "6bc2d994-90ba-431f-9cfc-c012a8644cb1",
+    "recipientId": "8ad3d4cd-e99f-42b8-9eed-fffd76a3bbb9",
+    "textContent": "Hello, I'm interested in the property you have for sale in the Dominican Republic.",
+    "status": "sent",
+    "replies": [],
+    "media": [],
+    "attachments": [],
+    "reactions": [],
+    "readReceipts": [],
+    "editHistory": [],
+    "mentions": [],
+    "createdAt": {
+      "$date": "2024-06-01T10:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2024-06-01T10:00:00.000Z"
+    }
+  },
+  {
+    "conversationId": "9a0c2e68-4b3d-4976-9a3b-63c0f9e8b8d2",
+    "senderId": "8ad3d4cd-e99f-42b8-9eed-fffd76a3bbb9",
+    "recipientId": "6bc2d994-90ba-431f-9cfc-c012a8644cb1",
+    "textContent": "Hi! Thank you for your interest. Do you have any specific questions about the property?",
+    "status": "read",
+    "replies": [],
+    "media": [],
+    "attachments": [],
+    "reactions": [],
+    "readReceipts": [],
+    "editHistory": [],
+    "mentions": [],
+    "createdAt": {
+      "$date": "2024-06-01T10:05:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2024-06-01T10:06:00.000Z"
+    }
+  },
+  {
+    "conversationId": "9a0c2e68-4b3d-4976-9a3b-63c0f9e8b8d2",
+    "senderId": "6bc2d994-90ba-431f-9cfc-c012a8644cb1",
+    "recipientId": "8ad3d4cd-e99f-42b8-9eed-fffd76a3bbb9",
+    "textContent": "Can you provide more details on the size and amenities of the property?",
+    "status": "read",
+    "replies": [],
+    "media": [],
+    "attachments": [],
+    "reactions": [],
+    "readReceipts": [],
+    "editHistory": [],
+    "mentions": [],
+    "createdAt": {
+      "$date": "2024-06-01T10:07:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2024-06-01T10:07:30.000Z"
+    }
+  },
+  {
+    "conversationId": "9a0c2e68-4b3d-4976-9a3b-63c0f9e8b8d2",
+    "senderId": "8ad3d4cd-e99f-42b8-9eed-fffd76a3bbb9",
+    "recipientId": "6bc2d994-90ba-431f-9cfc-c012a8644cb1",
+    "textContent": "Sure! The property is 3,000 sq ft with 4 bedrooms, 3 bathrooms, a modern kitchen, and a spacious living area.",
+    "status": "read",
+    "replies": [],
+    "media": [],
+    "attachments": [],
+    "reactions": [],
+    "readReceipts": [],
+    "editHistory": [],
+    "mentions": [],
+    "createdAt": {
+      "$date": "2024-06-01T10:10:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2024-06-01T10:11:00.000Z"
+    }
+  },
+  {
+    "conversationId": "9a0c2e68-4b3d-4976-9a3b-63c0f9e8b8d2",
+    "senderId": "8ad3d4cd-e99f-42b8-9eed-fffd76a3bbb9",
+    "recipientId": "6bc2d994-90ba-431f-9cfc-c012a8644cb1",
+    "textContent": "It also features a private pool, a garden, and a beautiful view of the ocean.",
+    "status": "read",
+    "replies": [],
+    "media": [],
+    "attachments": [],
+    "reactions": [],
+    "readReceipts": [],
+    "editHistory": [],
+    "mentions": [],
+    "createdAt": {
+      "$date": "2024-06-01T10:12:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2024-06-01T10:13:00.000Z"
+    }
+  },
+  {
+    "conversationId": "9a0c2e68-4b3d-4976-9a3b-63c0f9e8b8d2",
+    "senderId": "6bc2d994-90ba-431f-9cfc-c012a8644cb1",
+    "recipientId": "8ad3d4cd-e99f-42b8-9eed-fffd76a3bbb9",
+    "textContent": "That sounds amazing! What is the asking price?",
+    "status": "read",
+    "replies": [],
+    "media": [],
+    "attachments": [],
+    "reactions": [],
+    "readReceipts": [],
+    "editHistory": [],
+    "mentions": [],
+    "createdAt": {
+      "$date": "2024-06-01T10:14:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2024-06-01T10:14:30.000Z"
+    }
+  },
+  {
+    "conversationId": "9a0c2e68-4b3d-4976-9a3b-63c0f9e8b8d2",
+    "senderId": "8ad3d4cd-e99f-42b8-9eed-fffd76a3bbb9",
+    "recipientId": "6bc2d994-90ba-431f-9cfc-c012a8644cb1",
+    "textContent": "The asking price is $750,000. Are you interested in scheduling a visit?",
+    "status": "read",
+    "replies": [],
+    "media": [],
+    "attachments": [],
+    "reactions": [],
+    "readReceipts": [],
+    "editHistory": [],
+    "mentions": [],
+    "createdAt": {
+      "$date": "2024-06-01T10:15:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2024-06-01T10:15:30.000Z"
+    }
+  },
+  {
+    "conversationId": "9a0c2e68-4b3d-4976-9a3b-63c0f9e8b8d2",
+    "senderId": "6bc2d994-90ba-431f-9cfc-c012a8644cb1",
+    "recipientId": "8ad3d4cd-e99f-42b8-9eed-fffd76a3bbb9",
+    "textContent": "Yes, I would love to visit. When is a good time for you?",
+    "status": "read",
+    "replies": [],
+    "media": [],
+    "attachments": [],
+    "reactions": [],
+    "readReceipts": [],
+    "editHistory": [],
+    "mentions": [],
+    "createdAt": {
+      "$date": "2024-06-01T10:16:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2024-06-01T10:16:30.000Z"
+    }
+  },
+  {
+    "conversationId": "9a0c2e68-4b3d-4976-9a3b-63c0f9e8b8d2",
+    "senderId": "8ad3d4cd-e99f-42b8-9eed-fffd76a3bbb9",
+    "recipientId": "6bc2d994-90ba-431f-9cfc-c012a8644cb1",
+    "textContent": "I am available this weekend. How about Saturday at 2 PM?",
+    "status": "read",
+    "replies": [],
+    "media": [],
+    "attachments": [],
+    "reactions": [],
+    "readReceipts": [],
+    "editHistory": [],
+    "mentions": [],
+    "createdAt": {
+      "$date": "2024-06-01T10:17:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2024-06-01T10:17:30.000Z"
+    }
+  },
+  {
+    "conversationId": "9a0c2e68-4b3d-4976-9a3b-63c0f9e8b8d2",
+    "senderId": "6bc2d994-90ba-431f-9cfc-c012a8644cb1",
+    "recipientId": "8ad3d4cd-e99f-42b8-9eed-fffd76a3bbb9",
+    "textContent": "Saturday at 2 PM works for me. Can you send me the address?",
+    "status": "read",
+    "replies": [],
+    "media": [],
+    "attachments": [],
+    "reactions": [],
+    "readReceipts": [],
+    "editHistory": [],
+    "mentions": [],
+    "createdAt": {
+      "$date": "2024-06-01T10:18:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2024-06-01T10:18:30.000Z"
+    }
+  },
+  {
+    "conversationId": "9a0c2e68-4b3d-4976-9a3b-63c0f9e8b8d2",
+    "senderId": "8ad3d4cd-e99f-42b8-9eed-fffd76a3bbb9",
+    "recipientId": "6bc2d994-90ba-431f-9cfc-c012a8644cb1",
+    "textContent": "Sure, the address is 123 Ocean View Drive, Punta Cana. See you on Saturday!",
+    "status": "read",
+    "replies": [],
+    "media": [],
+    "attachments": [],
+    "reactions": [],
+    "readReceipts": [],
+    "editHistory": [],
+    "mentions": [],
+    "createdAt": {
+      "$date": "2024-06-01T10:19:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2024-06-01T10:19:30.000Z"
+    }
+  },
+  {
+    "conversationId": "9a0c2e68-4b3d-4976-9a3b-63c0f9e8b8d2",
+    "senderId": "6bc2d994-90ba-431f-9cfc-c012a8644cb1",
+    "recipientId": "8ad3d4cd-e99f-42b8-9eed-fffd76a3bbb9",
+    "textContent": "Thank you! Looking forward to it.",
+    "status": "read",
+    "replies": [],
+    "media": [],
+    "attachments": [],
+    "reactions": [],
+    "readReceipts": [],
+    "editHistory": [],
+    "mentions": [],
+    "createdAt": {
+      "$date": "2024-06-01T10:20:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2024-06-01T10:20:30.000Z"
+    }
+  },
+  {
+    "conversationId": "9a0c2e68-4b3d-4976-9a3b-63c0f9e8b8d2",
+    "senderId": "8ad3d4cd-e99f-42b8-9eed-fffd76a3bbb9",
+    "recipientId": "6bc2d994-90ba-431f-9cfc-c012a8644cb1",
+    "textContent": "You're welcome! See you soon.",
+    "status": "read",
+    "replies": [],
+    "media": [],
+    "attachments": [],
+    "reactions": [],
+    "readReceipts": [],
+    "editHistory": [],
+    "mentions": [],
+    "createdAt": {
+      "$date": "2024-06-01T10:21:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2024-06-01T10:21:30.000Z"
+    }
+  },
+  {
+    "conversationId": "9a0c2e68-4b3d-4976-9a3b-63c0f9e8b8d2",
+    "senderId": "6bc2d994-90ba-431f-9cfc-c012a8644cb1",
+    "recipientId": "8ad3d4cd-e99f-42b8-9eed-fffd76a3bbb9",
+    "textContent": "Quick question: is the property furnished?",
+    "status": "read",
+    "replies": [],
+    "media": [],
+    "attachments": [],
+    "reactions": [],
+    "readReceipts": [],
+    "editHistory": [],
+    "mentions": [],
+    "createdAt": {
+      "$date": "2024-06-01T10:22:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2024-06-01T10:22:30.000Z"
+    }
+  },
+  {
+    "conversationId": "9a0c2e68-4b3d-4976-9a3b-63c0f9e8b8d2",
+    "senderId": "8ad3d4cd-e99f-42b8-9eed-fffd76a3bbb9",
+    "recipientId": "6bc2d994-90ba-431f-9cfc-c012a8644cb1",
+    "textContent": "Yes, the property comes fully furnished with high-quality furniture and appliances.",
+    "status": "read",
+    "replies": [],
+    "media": [],
+    "attachments": [],
+    "reactions": [],
+    "readReceipts": [],
+    "editHistory": [],
+    "mentions": [],
+    "createdAt": {
+      "$date": "2024-06-01T10:23:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2024-06-01T10:23:30.000Z"
+    }
+  },
+  {
+    "conversationId": "9a0c2e68-4b3d-4976-9a3b-63c0f9e8b8d2",
+    "senderId": "6bc2d994-90ba-431f-9cfc-c012a8644cb1",
+    "recipientId": "8ad3d4cd-e99f-42b8-9eed-fffd76a3bbb9",
+    "textContent": "Great! Are there any recent renovations or updates?",
+    "status": "read",
+    "replies": [],
+    "media": [],
+    "attachments": [],
+    "reactions": [],
+    "readReceipts": [],
+    "editHistory": [],
+    "mentions": [],
+    "createdAt": {
+      "$date": "2024-06-01T10:24:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2024-06-01T10:24:30.000Z"
+    }
+  },
+  {
+    "conversationId": "9a0c2e68-4b3d-4976-9a3b-63c0f9e8b8d2",
+    "senderId": "8ad3d4cd-e99f-42b8-9eed-fffd76a3bbb9",
+    "recipientId": "6bc2d994-90ba-431f-9cfc-c012a8644cb1",
+    "textContent": "Yes, the kitchen and bathrooms were recently updated with new fixtures and appliances.",
+    "status": "read",
+    "replies": [],
+    "media": [],
+    "attachments": [],
+    "reactions": [],
+    "readReceipts": [],
+    "editHistory": [],
+    "mentions": [],
+    "createdAt": {
+      "$date": "2024-06-01T10:25:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2024-06-01T10:25:30.000Z"
+    }
+  },
+  {
+    "conversationId": "9a0c2e68-4b3d-4976-9a3b-63c0f9e8b8d2",
+    "senderId": "6bc2d994-90ba-431f-9cfc-c012a8644cb1",
+    "recipientId": "8ad3d4cd-e99f-42b8-9eed-fffd76a3bbb9",
+    "textContent": "Sounds perfect. Does the property have a garage or parking space?",
+    "status": "read",
+    "replies": [],
+    "media": [],
+    "attachments": [],
+    "reactions": [],
+    "readReceipts": [],
+    "editHistory": [],
+    "mentions": [],
+    "createdAt": {
+      "$date": "2024-06-01T10:26:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2024-06-01T10:26:30.000Z"
+    }
+  },
+  {
+    "conversationId": "9a0c2e68-4b3d-4976-9a3b-63c0f9e8b8d2",
+    "senderId": "8ad3d4cd-e99f-42b8-9eed-fffd76a3bbb9",
+    "recipientId": "6bc2d994-90ba-431f-9cfc-c012a8644cb1",
+    "textContent": "Yes, it has a two-car garage and additional parking space for guests.",
+    "status": "read",
+    "replies": [],
+    "media": [],
+    "attachments": [],
+    "reactions": [],
+    "readReceipts": [],
+    "editHistory": [],
+    "mentions": [],
+    "createdAt": {
+      "$date": "2024-06-01T10:27:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2024-06-01T10:27:30.000Z"
+    }
+  },
+  {
+    "conversationId": "9a0c2e68-4b3d-4976-9a3b-63c0f9e8b8d2",
+    "senderId": "6bc2d994-90ba-431f-9cfc-c012a8644cb1",
+    "recipientId": "8ad3d4cd-e99f-42b8-9eed-fffd76a3bbb9",
+    "textContent": "That's excellent. Are there any homeowner association fees?",
+    "status": "read",
+    "replies": [],
+    "media": [],
+    "attachments": [],
+    "reactions": [],
+    "readReceipts": [],
+    "editHistory": [],
+    "mentions": [],
+    "createdAt": {
+      "$date": "2024-06-01T10:28:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2024-06-01T10:28:30.000Z"
+    }
+  },
+  {
+    "conversationId": "9a0c2e68-4b3d-4976-9a3b-63c0f9e8b8d2",
+    "senderId": "8ad3d4cd-e99f-42b8-9eed-fffd76a3bbb9",
+    "recipientId": "6bc2d994-90ba-431f-9cfc-c012a8644cb1",
+    "textContent": "Yes, the monthly HOA fee is $200, which covers maintenance of common areas and security.",
+    "status": "read",
+    "replies": [],
+    "media": [],
+    "attachments": [],
+    "reactions": [],
+    "readReceipts": [],
+    "editHistory": [],
+    "mentions": [],
+    "createdAt": {
+      "$date": "2024-06-01T10:29:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2024-06-01T10:29:30.000Z"
+    }
+  },
+  {
+    "conversationId": "9a0c2e68-4b3d-4976-9a3b-63c0f9e8b8d2",
+    "senderId": "6bc2d994-90ba-431f-9cfc-c012a8644cb1",
+    "recipientId": "8ad3d4cd-e99f-42b8-9eed-fffd76a3bbb9",
+    "textContent": "Good to know. Are there any restrictions on renting out the property?",
+    "status": "read",
+    "replies": [],
+    "media": [],
+    "attachments": [],
+    "reactions": [],
+    "readReceipts": [],
+    "editHistory": [],
+    "mentions": [],
+    "createdAt": {
+      "$date": "2024-06-01T10:30:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2024-06-01T10:30:30.000Z"
+    }
+  },
+  {
+    "conversationId": "9a0c2e68-4b3d-4976-9a3b-63c0f9e8b8d2",
+    "senderId": "8ad3d4cd-e99f-42b8-9eed-fffd76a3bbb9",
+    "recipientId": "6bc2d994-90ba-431f-9cfc-c012a8644cb1",
+    "textContent": "There are no restrictions. You can rent it out short-term or long-term as you prefer.",
+    "status": "read",
+    "replies": [],
+    "media": [],
+    "attachments": [],
+    "reactions": [],
+    "readReceipts": [],
+    "editHistory": [],
+    "mentions": [],
+    "createdAt": {
+      "$date": "2024-06-01T10:31:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2024-06-01T10:31:30.000Z"
+    }
+  }
+]
