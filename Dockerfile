@@ -3,10 +3,10 @@ FROM node:20-alpine AS build
 WORKDIR /app
 
 # Accept build arguments
-# ARG SENTRY_AUTH_TOKEN
+ARG SENTRY_AUTH_TOKEN
 
 # Set environment variables
-# ENV SENTRY_AUTH_TOKEN=$SENTRY_AUTH_TOKEN
+ENV SENTRY_AUTH_TOKEN=$SENTRY_AUTH_TOKEN
 
 # Copy package.json and package-lock.json
 COPY package.json package-lock.json ./
